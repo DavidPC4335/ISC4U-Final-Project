@@ -17,6 +17,7 @@ public class Surface extends JPanel implements Runnable{
     private Thread animator;
     private final int DELAY = 20;
     
+    private World gameWorld = new World();
     
     public Surface(){
         super();
@@ -37,6 +38,7 @@ public class Surface extends JPanel implements Runnable{
     public void draw(Graphics g){
         //draw here
         Graphics2D g2d = (Graphics2D)g;
+        gameWorld.draw(g2d);
         
     }
     public void run(){
