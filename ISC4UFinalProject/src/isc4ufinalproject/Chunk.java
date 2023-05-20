@@ -21,6 +21,7 @@ public class Chunk {
     private int[][] tiles;
     private static final int tSize = 32, sHeight = 25;
     public static final int WIDTH = 25 * tSize;
+    public static final double WEIGHT = 0.2;
     private static Image[] tile_images = loadImages();
 
     public Chunk() {
@@ -78,13 +79,14 @@ public class Chunk {
         double rand = 0;
         for (int i = 0; i < t.length; i++) {
             rand = Math.random();//generate random number for chunk Generation;
-            if (rand < 0.25) {//down weight
+            if (rand < WEIGHT && height>10) {//down weight
                 height--;
-            } else if (rand > 0.75) {//up weight
+            } else if (rand > 1-WEIGHT &&height<30) {//up weight
                 height++;
             }
 
             for (int j = height; j < t[i].length; j++) {
+                //System.out.println("i"+i+"\tj"+j+"\theight"+height);
                 t[i][j] = 1;//set to index of dirt Tile
             }
 

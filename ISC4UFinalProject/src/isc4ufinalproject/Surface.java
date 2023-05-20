@@ -4,9 +4,10 @@
  */
 package isc4ufinalproject;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 
 /**
@@ -15,12 +16,16 @@ import javax.swing.JPanel;
  */
 public class Surface extends JPanel implements Runnable{
     private Thread animator;
-    private final int DELAY = 20;
+    private final int DELAY = 15;
     
     private World gameWorld = new World();
     
     public Surface(){
         super();
+        this.setFocusable(true);
+        this.requestFocus();
+        addKeyListener(gameWorld);
+        addMouseListener(gameWorld);
         
     }
     public void addNotify(){
@@ -69,5 +74,7 @@ public class Surface extends JPanel implements Runnable{
         super.paintComponent(g);
         draw(g);
     }
+ 
+
 
 }
