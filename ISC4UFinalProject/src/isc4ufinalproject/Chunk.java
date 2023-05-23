@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 public class Chunk {
 
     private int[][] tiles;
-    private static final int tSize = 32, sHeight = 25;
+    public static final int tSize = 32, sHeight = 25;
     public static final int WIDTH = 25 * tSize;
     public static final double WEIGHT = 0.2;
     private static Image[] tile_images = loadImages();
@@ -110,5 +110,8 @@ public class Chunk {
                 }
             }
         }
+    }
+    public boolean getSolid(int i,int j){
+        return (tiles[i][j] != 0);
     }
 }

@@ -15,8 +15,8 @@ import java.awt.Rectangle;
  */
 public class Player extends Entity{
 
-     public Player(double x, double y,int width,int height){
-        super(x,y,width,height);
+     public Player(double x, double y){
+        super(x,y,32,64);
         
     }
     

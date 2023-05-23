@@ -16,9 +16,11 @@ import java.awt.Shape;
  */
 public abstract class Entity {
     protected double x,y,xspd,yspd;
-    public static final double GRAVITY = 0.3;
+    public static final double GRAVITY = -0.3;
     protected Shape hitBox;
     
+    
+    boolean isCollided = false;
     public abstract void draw(Graphics2D g2d,double x,double y);
     
     
@@ -54,5 +56,15 @@ public abstract class Entity {
         }else if(x>World.WIDTH){
             x = 0;
         }
+        if(!isCollided){
+        x+=xspd;
+        y+=yspd;
+        yspd+=GRAVITY;
+        }
+        
+    }
+    
+    public void setCollided(boolean collided){
+        this.isCollided = collided;
     }
 }
