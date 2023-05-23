@@ -6,6 +6,7 @@
 package isc4ufinalproject;
 
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -32,31 +33,52 @@ public class World implements KeyListener, MouseListener {
 
     public World() {
         px = 0;
-        py = -200;
+        py = -400;
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
-        player = new Player(player_screen_x, player_screen_y, 100, 100);
+        player = new Player(player_screen_x, player_screen_y);
         entities.add(player);
 
     }
 
     public void draw(Graphics2D g2d) {
-      
         drawWorld(g2d);
-
+        Entity e;
           //setpping entities
         for (int i = 0; i < entities.size(); i++) {//step all entities
-            entities.get(i).step();
+            e = entities.get(i);
+            e.setCollided(checkCol(e));
+            e.step();
         }
+        player.move(xmove, ymove);
         player.draw(g2d, player_screen_x, player_screen_y);
-        
+       
 
+    }
+    
+    
+    public boolean checkCol(Entity e){
+        boolean collided = false;
+        int roundX = (int)Math.round(e.getX());
+        int roundY = (int)Math.round(e.getY());
+        int i = (roundX%Chunk.WIDTH)/Chunk.tSize;
+        int j = (roundY)/Chunk.tSize;
+        int chunkI = getChunki(e.getX());
+        Chunk ChunkOn = chunks[chunkI];
+        Shape bounds = e.getBounds();
+        System.out.println("i"+i+"   j"+j);
+            if(ChunkOn.getSolid(i,j)){
+                collided = true;
+            }
+        
+        
+        return collided;
     }
     
     public void drawWorld(Graphics2D g2d){
         
         //drawing world
         double chunkScreenX, chunkScreenY;
-        player.move(xmove, ymove);
+        
         //player_screen_x+=xmove;
         double x = player.getX();
         double y = player.getY();
@@ -111,6 +133,7 @@ public class World implements KeyListener, MouseListener {
                 ymove = moveSpeed;
                 break;
             case 's':
+                 
                 ymove = -moveSpeed;
                 break;
         }
