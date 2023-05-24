@@ -28,12 +28,12 @@ public class World implements KeyListener, MouseListener {
     //as of now the world is 50 chunks wide
     private Chunk[] chunks = new Chunk[50];
     private Chunk[] drawChunks;
-
+    public String debugMessage = "";
     private ArrayList<Entity> entities = new ArrayList();
 
     public World() {
         px = 0;
-        py = -400;
+        py = 0;
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
         player = new Player(player_screen_x, player_screen_y);
         entities.add(player);
@@ -41,9 +41,11 @@ public class World implements KeyListener, MouseListener {
     }
 
     public void draw(Graphics2D g2d) {
+        g2d.drawString(debugMessage, 10, 10);
+        debugMessage = "";
         drawWorld(g2d);
         Entity e;
-          //setpping entities
+        //setpping entities
         for (int i = 0; i < entities.size(); i++) {//step all entities
             e = entities.get(i);
             e.setCollided(checkCol(e));
@@ -51,34 +53,31 @@ public class World implements KeyListener, MouseListener {
         }
         player.move(xmove, ymove);
         player.draw(g2d, player_screen_x, player_screen_y);
-       
 
     }
-    
-    
-    public boolean checkCol(Entity e){
+
+    public boolean checkCol(Entity e) {
         boolean collided = false;
-        int roundX = (int)Math.round(e.getX());
-        int roundY = (int)Math.round(e.getY());
-        int i = (roundX%Chunk.WIDTH)/Chunk.tSize;
-        int j = (roundY)/Chunk.tSize;
+        int roundX = (int) Math.round(e.getX());
+        int roundY = (int) Math.round(e.getY());
+        int i = (roundX % Chunk.WIDTH) / Chunk.tSize;
+        int j = (roundY + Chunk.Y) / Chunk.tSize;
         int chunkI = getChunki(e.getX());
         Chunk ChunkOn = chunks[chunkI];
         Shape bounds = e.getBounds();
-        System.out.println("i"+i+"   j"+j);
-            if(ChunkOn.getSolid(i,j)){
-                collided = true;
-            }
-        
-        
+        debugMessage += "i" + i + "   j" + j + "\t (X,Y): ("+roundX+","+roundY+") \t"+Chunk.Y;
+        if (ChunkOn.getSolid(i, j)) {
+            collided = true;
+        }
+
         return collided;
     }
-    
-    public void drawWorld(Graphics2D g2d){
-        
+
+    public void drawWorld(Graphics2D g2d) {
+
         //drawing world
         double chunkScreenX, chunkScreenY;
-        
+
         //player_screen_x+=xmove;
         double x = player.getX();
         double y = player.getY();
@@ -86,7 +85,7 @@ public class World implements KeyListener, MouseListener {
         drawChunks = getVisibleChunks(x);
 
         chunkScreenX = (i * Chunk.WIDTH) - x;//get the player X on the screen
-        chunkScreenY = y;
+        chunkScreenY = Chunk.Y + y;
 
         int index;
         for (int j = 0; j < 4; j++) {
@@ -99,7 +98,7 @@ public class World implements KeyListener, MouseListener {
         int x2 = (int) Math.round(x);
         Chunk[] list = new Chunk[4];
         for (int i = 0; i < list.length; i++) {
-            list[i] = chunks[getChunki(x+(Chunk.WIDTH * (i)))];
+            list[i] = chunks[getChunki(x + (Chunk.WIDTH * (i)))];
         }
         return list;
 
@@ -133,7 +132,7 @@ public class World implements KeyListener, MouseListener {
                 ymove = moveSpeed;
                 break;
             case 's':
-                 
+
                 ymove = -moveSpeed;
                 break;
         }
