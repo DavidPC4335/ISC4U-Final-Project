@@ -6,7 +6,7 @@
 package isc4ufinalproject;
 
 import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
  */
 public class World implements KeyListener, MouseListener {
 
-    private double px, player_screen_y = 540, player_screen_x = 960;//playerX and player YU
+    private double px, player_screen_y = 540, player_screen_x = 930;//playerX and player YU
     private double py;
-    private double xmove = 0, ymove = 0, moveSpeed = 4;
+    private double xmove = 0, ymove = 0, moveSpeed = 0.3;
     public static final int WIDTH = 40000;
     public static final int HEIGHT = 3200;
     private Player player;
@@ -35,12 +35,13 @@ public class World implements KeyListener, MouseListener {
         px = 0;
         py = 0;
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
-        player = new Player(player_screen_x, player_screen_y);
+        player = new Player(player_screen_x, 0,this);
         entities.add(player);
 
     }
 
     public void draw(Graphics2D g2d) {
+        debugMessage +="(X,Y): ("+(int)player.getX()+","+(int)player.getY()+") \t"+Chunk.Y;
         g2d.drawString(debugMessage, 10, 10);
         debugMessage = "";
         drawWorld(g2d);
@@ -48,7 +49,6 @@ public class World implements KeyListener, MouseListener {
         //setpping entities
         for (int i = 0; i < entities.size(); i++) {//step all entities
             e = entities.get(i);
-            e.setCollided(checkCol(e));
             e.step();
         }
         player.move(xmove, ymove);
@@ -56,19 +56,23 @@ public class World implements KeyListener, MouseListener {
 
     }
 
-    public boolean checkCol(Entity e) {
+    public boolean checkCollision(Entity e,double xoff,double yoff) {
         boolean collided = false;
-        int roundX = (int) Math.round(e.getX());
-        int roundY = (int) Math.round(e.getY());
+        int roundX = (int) Math.round(e.getX()+xoff);
+        int roundY = (int) Math.round(e.getY()+yoff);
         int i = (roundX % Chunk.WIDTH) / Chunk.tSize;
         int j = (roundY + Chunk.Y) / Chunk.tSize;
-        int chunkI = getChunki(e.getX());
-        Chunk ChunkOn = chunks[chunkI];
-        Shape bounds = e.getBounds();
-        debugMessage += "i" + i + "   j" + j + "\t (X,Y): ("+roundX+","+roundY+") \t"+Chunk.Y;
-        if (ChunkOn.getSolid(i, j)) {
+        int chunkI = getChunki(e.getX()+xoff);
+        Chunk chunkOn = chunks[chunkI];
+        Rectangle bounds = e.getBounds();
+        
+        if(chunkOn.getSolid(i,j+(int)(bounds.getHeight()/Chunk.tSize))){
             collided = true;
         }
+        if(chunkOn.getSolid(i,j)){
+            collided = true;
+        }
+
 
         return collided;
     }
@@ -79,13 +83,13 @@ public class World implements KeyListener, MouseListener {
         double chunkScreenX, chunkScreenY;
 
         //player_screen_x+=xmove;
-        double x = player.getX();
+        double x = player.getX()-player_screen_x;
         double y = player.getY();
         int i = getChunki(x);
         drawChunks = getVisibleChunks(x);
 
-        chunkScreenX = (i * Chunk.WIDTH) - x;//get the player X on the screen
-        chunkScreenY = Chunk.Y + y;
+        chunkScreenX = ((i * Chunk.WIDTH) - x );//get the player X on the screen
+        chunkScreenY = (Chunk.Y - y)+player_screen_y;
 
         int index;
         for (int j = 0; j < 4; j++) {
@@ -129,11 +133,11 @@ public class World implements KeyListener, MouseListener {
                 xmove = -moveSpeed;
                 break;
             case 'w':
-                ymove = moveSpeed;
+                //ymove = -moveSpeed;
                 break;
             case 's':
 
-                ymove = -moveSpeed;
+                //ymove = moveSpeed;
                 break;
         }
     }
@@ -167,7 +171,14 @@ public class World implements KeyListener, MouseListener {
      * @param e event passed from user
      */
     public void keyTyped(KeyEvent e) {
-
+         switch (e.getKeyChar()) {
+             
+             case 'w':
+                 if(checkCollision(player,0,1)){
+                 player.yspd = -4;
+                 }
+                 break;
+         }
     }
 
     /**
