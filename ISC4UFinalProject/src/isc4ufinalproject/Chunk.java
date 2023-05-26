@@ -25,7 +25,6 @@ public class Chunk {
     public static final int WIDTH = 25 * tSize;
     public static final double WEIGHT = 0.2;
     private static Image[] tile_images = loadImages();
-
     /**
      * constructor method for a chunk
      */
@@ -124,7 +123,7 @@ public class Chunk {
                     g2d.drawImage(tile_images[tiles[i][j]], dx + (tSize * i), dy + (tSize * j), null);
                     //System.out.println(dx + (tSize * i) + "," + dy + (tSize * j));
                 }else{
-                    g2d.drawString("("+i+","+j+")",dx + (tSize * i), dy + (tSize * j));
+                  //  g2d.drawString("("+i+","+j+")",dx + (tSize * i), dy + (tSize * j));
                 }
             }
         }
@@ -134,6 +133,16 @@ public class Chunk {
         return (tiles[i][j] != 0);
         }else{
             return true;
+        }
+    }
+    public boolean remove(int i,int j){
+        if(j>=0 && j<tiles[0].length && i<tiles.length){
+            if(tiles[i][j] !=0){
+            tiles[i][j] =0;
+            }
+        return true;
+        }else{
+            return false;
         }
     }
 }
