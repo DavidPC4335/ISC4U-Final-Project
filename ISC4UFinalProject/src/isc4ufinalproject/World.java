@@ -23,11 +23,12 @@ public class World implements KeyListener, MouseListener {
 
     private double player_screen_y = 540, player_screen_x = 930;//playerX and player YU
     private double mx,my;
-    private double xmove = 0, ymove = 0, moveSpeed = 0.3;
-    public static final int WIDTH = 40000;
+    private double xmove = 0, ymove = 0, moveSpeed = 1;
+    public static final int WIDTH = 40000,playerStartX = 930;
     public static final int HEIGHT = 3200;
     private Player player;
     private boolean clicked =false;
+    private boolean canPlace = true;
     //as of now the world is 50 chunks wide
     private Chunk[] chunks = new Chunk[50];
     private Chunk[] drawChunks;
@@ -67,17 +68,20 @@ public void updateWorld(){
         int roundY = (int) Math.round(e.getY() + yoff);
         int i = (roundX % Chunk.WIDTH) / Chunk.tSize;
         int j = (roundY + Chunk.Y) / Chunk.tSize;
+        int tempi;
         int chunkI = getChunki(e.getX() + xoff);
         Chunk chunkOn = chunks[chunkI];
         Rectangle bounds = e.getBounds();
         //checking Y collision
          for (int k = 0; k <= (bounds.getWidth() / Chunk.tSize); k++) {//repeat for height
+             chunkOn = chunks[getChunki(e.getX() + xoff+(Chunk.tSize*k))];
+             tempi = ((roundX+(Chunk.tSize*(k))) % Chunk.WIDTH) / Chunk.tSize;
         if (yoff > 0) {
-            if (chunkOn.getSolid(i+k, j + (int) (bounds.getHeight() / Chunk.tSize))) {
+            if (chunkOn.getSolid(tempi, j + (int) (bounds.getHeight() / Chunk.tSize))) {
                 collided = true;
             }
         } else if (yoff < 0) {
-            if (chunkOn.getSolid(i+k, j)) {
+            if (chunkOn.getSolid(tempi, j)) {
                 collided = true;
             }
         }
@@ -110,9 +114,21 @@ public void updateWorld(){
         double y = player.getY();
         int i = getChunki(x);
         drawChunks = getVisibleChunks(x);
-
+         debugMessage+=i;
+        if(i== 49 && x <500){//edge cases for end of world
+            i=0;
+            if(player_screen_x <= playerStartX ){
+            player_screen_x +=player.getXSpd();
+            }else{
+                player_screen_x = playerStartX ;
+            }
+        drawChunks[0] = chunks[0];
+        drawChunks[1] = chunks[1];
+        drawChunks[2] = chunks[2];
+        }
         chunkScreenX = ((i * Chunk.WIDTH) - x);//get the player X on the screen
         chunkScreenY = (Chunk.Y - y) + player_screen_y;
+       
 
         int index;
         for (int j = 0; j < 4; j++) {
@@ -125,16 +141,19 @@ public void updateWorld(){
             int k = (m.y + Chunk.Y) / Chunk.tSize;
              
             int mi = getChunki(m.x);
+             if(clicked){
+                 clicked = false;
             if(chunks[mi].getSolid(j, k)){
                 if(m.distance(new Point((int)player.getX(),(int)player.getY()))<400){
-                if(clicked){
-                    chunks[mi].remove(j,k);
-                }
+                chunks[mi].remove(j,k);
                 g2d.setColor(Color.yellow);
                 g2d.drawRect((int)(mi*Chunk.WIDTH-x + (j*Chunk.tSize)),(int)((k*Chunk.tSize)-y+player_screen_y), Chunk.tSize, Chunk.tSize);
                 g2d.setColor(Color.BLACK);
                 }
-            }
+            }else{
+                 chunks[mi].place(j,k,1);
+             }
+             }
             
     }
 
@@ -215,7 +234,7 @@ public void updateWorld(){
 
             case 'w':
                 if (checkCollision(player, 0, 1)) {
-                    player.yspd = -4;
+                    player.yspd = -8;
                 }
                 break;
         }

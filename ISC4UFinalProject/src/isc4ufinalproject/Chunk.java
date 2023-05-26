@@ -123,7 +123,9 @@ public class Chunk {
                     g2d.drawImage(tile_images[tiles[i][j]], dx + (tSize * i), dy + (tSize * j), null);
                     //System.out.println(dx + (tSize * i) + "," + dy + (tSize * j));
                 }else{
-                  //  g2d.drawString("("+i+","+j+")",dx + (tSize * i), dy + (tSize * j));
+                    if(i == 24){
+                    g2d.drawString("("+i+","+j+")",dx + (tSize * i), dy + (tSize * j));
+                  }
                 }
             }
         }
@@ -132,6 +134,7 @@ public class Chunk {
         if(j>=0 && j<tiles[0].length && i<tiles.length){
         return (tiles[i][j] != 0);
         }else{
+            System.out.println(i);
             return true;
         }
     }
@@ -142,6 +145,17 @@ public class Chunk {
             }
         return true;
         }else{
+            return false;
+        }
+    }
+    public boolean place(int i,int j,int tile){
+        if(j>=0 && j<tiles[0].length && i<tiles.length){
+            if(tiles[i][j] ==0){
+            tiles[i][j] =tile;
+            }
+        return true;
+        }else{
+            
             return false;
         }
     }

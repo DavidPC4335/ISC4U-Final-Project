@@ -16,7 +16,7 @@ import java.awt.Shape;
  */
 public abstract class Entity {
     protected double x,y,xspd,yspd;
-    public static final double GRAVITY = 0.1;
+    public static final double GRAVITY = 0.2;
     protected Rectangle hitBox;
     protected World world;
     
@@ -58,25 +58,28 @@ public abstract class Entity {
     }
     
     public void step(){
-        if(x<0){
-            x = World.WIDTH;
-        }else if(x>World.WIDTH){
+        if(x+xspd*2<0){
             x = 0;
+        }else if(x+xspd*2>World.WIDTH){
+            
+            x = World.WIDTH;
         }
        
         x+=xspd;
         y+=yspd;
-        xspd*=0.95;
+        xspd*=0.90;
         yspd += GRAVITY;
         if(world.checkCollision(this,0,yspd)){
             yspd =0;
         }
         if(world.checkCollision(this,xspd,0) || world.checkCollision(this,xspd+hitBox.getWidth(),0)){
-            x-=xspd;
+            x-=xspd*1.1;
             xspd =0;
         }
     }
-    
+    public double getXSpd(){
+        return this.xspd;
+    }
     public void setCollided(boolean collided){
         this.isCollided = collided;
     }
