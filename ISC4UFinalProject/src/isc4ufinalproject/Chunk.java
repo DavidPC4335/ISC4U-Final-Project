@@ -21,7 +21,7 @@ public class Chunk {
 
     //initializinf private variables
     private int[][] tiles;
-    public static final int tSize = 32, sHeight = 25,Y = 0;
+    public static final int tSize = 32, sHeight = 25, Y = 0;
     public static final int WIDTH = 25 * tSize;
     public static final double WEIGHT = 0.2;
     private static Image[] tile_images = loadImages();
@@ -117,22 +117,28 @@ public class Chunk {
      */
     public void draw(Graphics2D g2d, double x, double y) {
         int dx = (int) Math.round(x), dy = (int) Math.round(y); //assigning x and y coords to rounded numbers as an int
-        for (int i = 0; i < tiles.length; i++) {    //for the number f tiles in a chunk
+        for (int i = 0; i < tiles.length; i++) {    //for the number the first dimension of tiles' elements
             for (int j = 0; j < tiles[0].length; j++) { //loops through entire chunk
-                //System.out.println("i"+i+"  j"+j);
                 if (tiles[i][j] > 0) {//if tile exists
-                    g2d.drawImage(tile_images[tiles[i][j]], dx + (tSize * i), dy + (tSize * j), null);
-                    //System.out.println(dx + (tSize * i) + "," + dy + (tSize * j));
-                }else{
-                    g2d.drawString("("+i+","+j+")",dx + (tSize * i), dy + (tSize * j));
+                    g2d.drawImage(tile_images[tiles[i][j]], dx + (tSize * i), dy + (tSize * j), null);  //draws chumk
+                } else {
+                    //g2d.drawString("(" + i + "," + j + ")", dx + (tSize * i), dy + (tSize * j));    //displays the chunk coords
                 }
             }
         }
     }
-    public boolean getSolid(int i,int j){
-        if(j>=0 && j<tiles[0].length && i<tiles.length){
-        return (tiles[i][j] != 0);
-        }else{
+
+    /**
+     * method for telling if a tile in a chunk is a physical block
+     *
+     * @param i - the index of the first dimension of the tiles array
+     * @param j - the index of the second dimension of the tiles array
+     * @return - true if there is a block and false if not
+     */
+    public boolean getSolid(int i, int j) {
+        if (j >= 0 && j < tiles[0].length && i < tiles.length) {    //if j as well as i are valid indexes of tiles
+            return (tiles[i][j] != 0);  //return true if block is there / false if not
+        } else {    //if i or j is not a valid index
             return true;
         }
     }
