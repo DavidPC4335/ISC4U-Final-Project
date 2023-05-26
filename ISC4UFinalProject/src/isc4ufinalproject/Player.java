@@ -15,20 +15,24 @@ import java.awt.Rectangle;
  */
 public class Player extends Entity{
 
-     public Player(double x, double y,int width,int height){
-        super(x,y,width,height);
+     public Player(double x, double y,World world){
+        super(x,y,32,64,world);
         
     }
     
     
     
 public void draw(Graphics2D g2d,double x,double y){
-    g2d.drawRect((int)x,(int)y,100,100);
+    g2d.drawRect((int)x ,(int)y,(int)hitBox.getWidth(),(int)hitBox.getHeight());
 }
 
 public void move(double xmove,double ymove){
-    x+=xmove;
-    y+=ymove;
+    if(Math.abs(xspd) < 4){
+        xspd+=xmove;
+    }
+    if(Math.abs(ymove) > 0){
+        yspd = ymove;
+    }
 }
 
 
