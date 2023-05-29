@@ -38,11 +38,13 @@ public class Chunk {
      * @return - the array full of the desired buffered image
      */
     public static BufferedImage[] loadImages() {
-        BufferedImage b[] = new BufferedImage[2];   //initializind image array
+        BufferedImage b[] = new BufferedImage[3];   //initializind image array
         try {
             BufferedImage dirt = ImageIO.read(Chunk.class.getResourceAsStream("dirt.jpg")); //load the dirt sprite as a buffered image
+            BufferedImage stone = ImageIO.read(Chunk.class.getResourceAsStream("stone.jpg")); //load the dirt sprite as a buffered image
             b[0] = dirt;    //index 0 will not draw anything, bur must still contain an image
             b[1] = dirt;    //loads image to index 1
+            b[2] = stone;
 
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
@@ -100,7 +102,7 @@ public class Chunk {
             }
 
             for (int j = height; j < c.tiles[i].length; j++) {  //for the num int between the height and the number of chunks
-                c.tiles[i][j] = 1;  //set to index of dirt Tile
+                c.tiles[i][j] = (int) (1+(Math.random()+((double)(j-pHeight) / 100)));  //set to index of dirt Tile
             }
 
         }
