@@ -15,6 +15,7 @@ import java.awt.Rectangle;
  */
 public class Player extends Entity{
 
+        public final int MAXSPEED = 3;
      public Player(double x, double y,World world){
         super(x,y,32,64,world);
         
@@ -27,7 +28,7 @@ public void draw(Graphics2D g2d,double x,double y){
 }
 
 public void move(double xmove,double ymove){
-    if(Math.abs(xspd) < 4){
+    if(Math.abs(xspd) < MAXSPEED){
         xspd+=xmove;
     }
     if(Math.abs(ymove) > 0){

@@ -25,7 +25,6 @@ public class Chunk {
     public static final int WIDTH = 25 * tSize;
     public static final double WEIGHT = 0.2;
     private static Image[] tile_images = loadImages();
-
     /**
      * constructor method for a chunk
      */
@@ -39,11 +38,13 @@ public class Chunk {
      * @return - the array full of the desired buffered image
      */
     public static BufferedImage[] loadImages() {
-        BufferedImage b[] = new BufferedImage[2];   //initializind image array
+        BufferedImage b[] = new BufferedImage[3];   //initializind image array
         try {
             BufferedImage dirt = ImageIO.read(Chunk.class.getResourceAsStream("dirt.jpg")); //load the dirt sprite as a buffered image
+            BufferedImage stone = ImageIO.read(Chunk.class.getResourceAsStream("stone.jpg")); //load the dirt sprite as a buffered image
             b[0] = dirt;    //index 0 will not draw anything, bur must still contain an image
             b[1] = dirt;    //loads image to index 1
+            b[2] = stone;
 
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
@@ -101,7 +102,7 @@ public class Chunk {
             }
 
             for (int j = height; j < c.tiles[i].length; j++) {  //for the num int between the height and the number of chunks
-                c.tiles[i][j] = 1;  //set to index of dirt Tile
+                c.tiles[i][j] = (int) (1+(Math.random()+((double)(j-pHeight) / 100)));  //set to index of dirt Tile
             }
 
         }
@@ -120,14 +121,16 @@ public class Chunk {
         for (int i = 0; i < tiles.length; i++) {    //for the number the first dimension of tiles' elements
             for (int j = 0; j < tiles[0].length; j++) { //loops through entire chunk
                 if (tiles[i][j] > 0) {//if tile exists
-                    g2d.drawImage(tile_images[tiles[i][j]], dx + (tSize * i), dy + (tSize * j), null);  //draws chumk
-                } else {
-                    //g2d.drawString("(" + i + "," + j + ")", dx + (tSize * i), dy + (tSize * j));    //displays the chunk coords
+
+                    g2d.drawImage(tile_images[tiles[i][j]], dx + (tSize * i), dy + (tSize * j), null);
+                    //System.out.println(dx + (tSize * i) + "," + dy + (tSize * j));
+                }else{
+                    if(i == 24){
+                    g2d.drawString("("+i+","+j+")",dx + (tSize * i), dy + (tSize * j));
+                  }
                 }
             }
         }
-    }
-
     /**
      * method for telling if a tile in a chunk is a physical block
      *
@@ -135,11 +138,33 @@ public class Chunk {
      * @param j - the index of the second dimension of the tiles array
      * @return - true if there is a block and false if not
      */
-    public boolean getSolid(int i, int j) {
-        if (j >= 0 && j < tiles[0].length && i < tiles.length) {    //if j as well as i are valid indexes of tiles
-            return (tiles[i][j] != 0);  //return true if block is there / false if not
-        } else {    //if i or j is not a valid index
+    public boolean getSolid(int i,int j){
+        if(j>=0 && j<tiles[0].length && i<tiles.length){
+        return (tiles[i][j] != 0);
+        }else{
+            System.out.println(i);
             return true;
+        }
+    }
+    public boolean remove(int i,int j){
+        if(j>=0 && j<tiles[0].length && i<tiles.length){
+            if(tiles[i][j] !=0){
+            tiles[i][j] =0;
+            }
+        return true;
+        }else{
+            return false;
+        }
+    }
+    public boolean place(int i,int j,int tile){
+        if(j>=0 && j<tiles[0].length && i<tiles.length){
+            if(tiles[i][j] ==0){
+            tiles[i][j] =tile;
+            }
+        return true;
+        }else{
+            
+            return false;
         }
     }
 }
