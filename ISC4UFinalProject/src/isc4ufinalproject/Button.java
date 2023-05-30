@@ -4,6 +4,7 @@
  */
 package isc4ufinalproject;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
@@ -17,6 +18,8 @@ public class Button extends MenuComponent {
     private Rectangle butt;
     private boolean hovered = false;
     private int width, height;
+    private Color col = Color.red;
+    private Menu menu;
 
     /**
      * constructor method for a button
@@ -24,10 +27,11 @@ public class Button extends MenuComponent {
      * @param width - the width of the rectangle
      * @param height - the height of the rectangle
      */
-    public Button(int width, int height) {
-        this.width = width;
+    public Button(int x, int y, int width, int height,Menu menu) {
+         this.width = width;
         this.height = height;
-        Rectangle butt = new Rectangle(x, y, width, height);    //instatiating rectangle button
+        butt = new Rectangle(x, y, width, height);    //instatiating rectangle button
+        this.menu = menu;
     }
 
     /**
@@ -66,6 +70,10 @@ public class Button extends MenuComponent {
      * @param g - the graphics to draw the button
      */
     public void draw(Graphics2D g) {
+        g.setColor(col);
+        if(hovered){
+            g.setColor(col.darker());
+        }
         g.fill(butt);
     }
 
