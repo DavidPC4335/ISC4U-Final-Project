@@ -53,7 +53,7 @@ public class Label extends MenuComponent {
      */
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.black);
-        Font sFont = new Font("Consolas", Font.PLAIN, textSize);    //create new font of desired size
+        Font sFont = new Font("Consolas", Font.BOLD, textSize);    //create new font of desired size
         g2d.setFont(sFont); //apply font to g2d
         g2d.drawString(text, x, y); //draw the string text with g2d at x,y
     }

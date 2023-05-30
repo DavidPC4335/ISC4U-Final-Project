@@ -7,7 +7,11 @@ package isc4ufinalproject;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,7 +23,8 @@ public class Menu implements MouseListener{
     private boolean clicked;
     private double mx,my;
     private Surface gameSurface;
-    
+    public static final BufferedImage BACKGROUND = loadImages();
+    boolean drawBackground = false;
     public Menu(Surface gameSurface){
         this.gameSurface =gameSurface;
         mx=0;my=0;
@@ -32,16 +37,43 @@ public class Menu implements MouseListener{
     }
     
     
+    
+        /**
+     * method that loads the desired image into an image array
+     *
+     * @return - the array full of the desired buffered image
+     */
+    public static BufferedImage loadImages() {
+        BufferedImage b = null;   //initializind image array
+        try {
+            BufferedImage bg = ImageIO.read(Chunk.class.getResourceAsStream("pixelBackground.jpg")); //load the dirt sprite as a buffered image
+            b = bg;
+
+        } catch (IOException e) {   //catch if image can't be read
+            JOptionPane.showMessageDialog(null, e);
+        }
+        return b;   //return the loaded image array
+    }
+    
+    
+    
+    
+    
+    
     public void add(MenuComponent m){
         components.add(m);
     }
     public void draw(Graphics2D g2d){
+        if(drawBackground){
+            g2d.drawImage(BACKGROUND,0,0,gameSurface.getWidth(),gameSurface.getHeight(),null);
+        }
+        
         for (int i = 0; i <components.size(); i++) {
             MenuComponent m = components.get(i);
             m.draw(g2d);
             if(m instanceof Button){
                 if(((Button)m).checkClick(mx,my,clicked)){
-                    gameSurface.setScreen(1);
+                    ((Button)m).run();
                 }
             }
         }
@@ -53,7 +85,9 @@ public class Menu implements MouseListener{
         this.my = my;
     }
     
-    
+    public void setVisibleBackground(boolean v){
+        drawBackground = v;
+    }
     
     
     

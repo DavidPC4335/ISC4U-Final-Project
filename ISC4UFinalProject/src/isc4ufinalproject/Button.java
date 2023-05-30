@@ -5,6 +5,7 @@
 package isc4ufinalproject;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
@@ -20,18 +21,25 @@ public class Button extends MenuComponent {
     private int width, height;
     private Color col = Color.red;
     private Menu menu;
-
+    private String text;
+    private int txtSize;
+    private Runnable action;
     /**
      * constructor method for a button
      *
      * @param width - the width of the rectangle
      * @param height - the height of the rectangle
      */
-    public Button(int x, int y, int width, int height,Menu menu) {
+    public Button(int x, int y, int width, int height,String text,Menu menu) {
+        this.x=x;
+        this.y=y;
+        this.text = text;
          this.width = width;
         this.height = height;
         butt = new Rectangle(x, y, width, height);    //instatiating rectangle button
         this.menu = menu;
+        
+        this.txtSize = height/3;
     }
 
     /**
@@ -64,17 +72,33 @@ public class Button extends MenuComponent {
         return hovering(mouseX, mouseY) && clicked;
     }
 
+    public void setAction(Runnable r){
+        this.action = r;
+    }
+    
+    public void run(){
+        if(action != null){
+        action.run();
+        }
+    }
     /**
      * draw method for the button
      *
      * @param g - the graphics to draw the button
      */
     public void draw(Graphics2D g) {
+        
         g.setColor(col);
         if(hovered){
             g.setColor(col.darker());
         }
         g.fill(butt);
+        
+        
+        g.setColor(Color.black);
+        Font sFont = new Font("Consolas", Font.BOLD, txtSize);    //create new font of desired size
+        g.setFont(sFont); //apply font to g2d
+        g.drawString(text, x+width/15, y+(height/10)+txtSize); //draw the string text with g2d at x,y
     }
 
     /**

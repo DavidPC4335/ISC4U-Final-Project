@@ -5,8 +5,10 @@
  */
 package isc4ufinalproject;
 
+import static isc4ufinalproject.Menu.BACKGROUND;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -34,15 +36,22 @@ public class World implements KeyListener, MouseListener {
     private Chunk[] drawChunks;
     public static String debugMessage = "";
     private ArrayList<Entity> entities = new ArrayList();
+    //visuals
+    private Image background;
 
     public World() {
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
         player = new Player(WIDTH / 2, 0, this);
         entities.add(player);
-
+        background = Menu.BACKGROUND;
     }
 
     public void draw(Graphics2D g2d) {
+        /*DRAWING BACKGROUND*/
+        g2d.drawImage(background,0,0,1920,1080,null);
+        
+        
+        
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.drawString(debugMessage, 10, 10);
@@ -113,6 +122,7 @@ public class World implements KeyListener, MouseListener {
                 collided = true;
             }
         }
+         }
         //checking X collision
         for (int k = 0; k <= (bounds.getHeight() / Chunk.tSize); k++) {//repeat for height
 
@@ -128,6 +138,7 @@ public class World implements KeyListener, MouseListener {
             if (chunkOn.getSolid(i, j+k)) {
                 collided = true;
             }
+        }
         }
 
         return collided;
@@ -154,7 +165,7 @@ public class World implements KeyListener, MouseListener {
         for (int j = 0; j < 4; j++) {
             //System.out.println(chunkScreFenX + (Chunk.WIDTH * (j - 1)));
             drawChunks[j].draw(g2d, chunkScreenX + (Chunk.WIDTH * (j)), chunkScreenY);
-            g2d.drawString((i+j)+"",(int)chunkScreenX+500+(Chunk.WIDTH * (j)),500);
+            //g2d.drawString((i+j)+"",(int)chunkScreenX+500+(Chunk.WIDTH * (j)),500);
         }
         Point m = getMouseScreenPos();
 

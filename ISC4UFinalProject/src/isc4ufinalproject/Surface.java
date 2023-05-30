@@ -23,9 +23,10 @@ public class Surface extends JPanel implements Runnable {
     private final int DELAY = 15;
     private Point mp;
     private World gameWorld = new World();
-    private int focusScreen =0;
+    private int focusScreen = 0;
     private Menu titleMenu = getTitleMenu();
-    public Surface(){
+
+    public Surface() {
 
         super();
         this.setFocusable(true);
@@ -51,21 +52,21 @@ public class Surface extends JPanel implements Runnable {
     public void draw(Graphics g) {
         //draw here
 
-         Graphics2D g2d = (Graphics2D)g;
-         mp = getMousePos();
-        switch(focusScreen){
+        Graphics2D g2d = (Graphics2D) g;
+        mp = getMousePos();
+        switch (focusScreen) {
             case 0:
-                
-                titleMenu.setMousePos(mp.x,mp.y);
+
+                titleMenu.setMousePos(mp.x, mp.y);
                 titleMenu.draw(g2d);
                 break;
             case 1:
-       
-        gameWorld.setMousePos(mp.x,mp.y);
-        gameWorld.draw(g2d);
-        break;
+
+                gameWorld.setMousePos(mp.x, mp.y);
+                gameWorld.draw(g2d);
+                break;
             case 2:
-                
+
                 break;
         }
     }
@@ -107,16 +108,30 @@ public class Surface extends JPanel implements Runnable {
         }
     }
 
-    public Menu getTitleMenu(){
+    public Menu getTitleMenu() {
         Menu m = new Menu(this);
-        m.add(new Button(920,500,100,50,m));
-        m.add(new Label(100,100,20,"Test"));
+        m.setVisibleBackground(true);
+        
+        Button newWorld = new Button(920, 500, 200, 100, "New World", m);
+        
+        //setting the action for the "New world button to generate new world
+        newWorld.setAction(new Runnable() {
+
+            @Override
+            public void run() {
+                focusScreen = 1;
+
+            }
+        });
+        m.add(newWorld);
+        m.add(new Label(850, 100, 48, "Game name here"));
         return m;
     }
-    
-    public void setScreen(int i){
+
+    public void setScreen(int i) {
         focusScreen = i;
     }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
