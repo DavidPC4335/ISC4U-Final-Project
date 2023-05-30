@@ -90,14 +90,17 @@ public int updateWorld(int i,double x){
         int roundY = (int) Math.round(e.getY() + yoff);
         int i = (roundX % Chunk.WIDTH) / Chunk.tSize;
         int j = (roundY + Chunk.Y) / Chunk.tSize;
-        int tempi;
+        int tempi =i;
         int chunkI = getChunki(roundX);
         Chunk chunkOn = chunks[chunkI];
+        debugMessage+="chunki("+chunkI+","+i+") ";
+        
         Rectangle bounds = e.getBounds();
         //checking Y collision
          for (int k = 0; k <= (bounds.getWidth() / Chunk.tSize); k++) {//repeat for height
              chunkOn = chunks[getChunki(e.getX() + xoff+(Chunk.tSize*k))];
              tempi = ((roundX+(Chunk.tSize*(k))) % Chunk.WIDTH) / Chunk.tSize;
+             
         if (yoff > 0) {
             if (chunkOn.getSolid(tempi, j + (int) (bounds.getHeight() / Chunk.tSize))) {
                 collided = true;
@@ -110,12 +113,12 @@ public int updateWorld(int i,double x){
         }
         //checking X collision
         for (int k = 0; k <= (bounds.getHeight() / Chunk.tSize); k++) {//repeat for height
-       
+             chunkOn = chunks[getChunki(roundX)];
         if (xoff > 0) {
-            chunkOn = chunks[getChunki(roundX + Chunk.tSize)];
-            tempi = (i)%25;
+            
+            //tempi = (i)%25;
  
-            if (chunkOn.getSolid(tempi, j+k)) {
+            if (chunkOn.getSolid(i, j+k)) {
                 collided = true;
             }
         } else {
@@ -138,8 +141,8 @@ public int updateWorld(int i,double x){
         double y = player.getY();
         int i = getChunki(x);
         drawChunks = getVisibleChunks(x);
-         debugMessage+=i;
         i = updateWorld(i,x);
+        
         chunkScreenX = ((i * Chunk.WIDTH) - x);//get the player X on the screen
         chunkScreenY = (Chunk.Y - y) + player_screen_y;
        
@@ -148,6 +151,7 @@ public int updateWorld(int i,double x){
         for (int j = 0; j < 4; j++) {
             //System.out.println(chunkScreFenX + (Chunk.WIDTH * (j - 1)));
             drawChunks[j].draw(g2d, chunkScreenX + (Chunk.WIDTH * (j)), chunkScreenY);
+            g2d.drawString((i+j)+"",(int)chunkScreenX+500+(Chunk.WIDTH * (j)),500);
         }
             Point m = getMouseScreenPos();
            

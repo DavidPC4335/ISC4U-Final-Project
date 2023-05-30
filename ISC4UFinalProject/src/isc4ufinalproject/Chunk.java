@@ -131,6 +131,7 @@ public class Chunk {
                 }
             }
         }
+    }
     /**
      * method for telling if a tile in a chunk is a physical block
      *

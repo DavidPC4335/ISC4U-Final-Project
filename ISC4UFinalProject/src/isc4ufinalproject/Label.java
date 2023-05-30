@@ -4,6 +4,7 @@
  */
 package isc4ufinalproject;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
@@ -25,6 +26,7 @@ public class Label extends MenuComponent {
      * @param txt - the text message
      */
     public Label(int txtSz, String txt) {
+
         textSize = txtSz;
         text = txt;
     }
@@ -40,6 +42,8 @@ public class Label extends MenuComponent {
     public Label(int x, int y, int txtSz, String txt) {
         this.x = x;
         this.y = y;
+         textSize = txtSz;
+        text = txt;
     }
 
     /**
@@ -48,6 +52,7 @@ public class Label extends MenuComponent {
      * @param g2d - the graphics 2D to draw the label
      */
     public void draw(Graphics2D g2d) {
+        g2d.setColor(Color.black);
         Font sFont = new Font("Consolas", Font.PLAIN, textSize);    //create new font of desired size
         g2d.setFont(sFont); //apply font to g2d
         g2d.drawString(text, x, y); //draw the string text with g2d at x,y
