@@ -25,6 +25,7 @@ public class Chunk {
     public static final int WIDTH = 25 * tSize;
     public static final double WEIGHT = 0.2;
     private static Image[] tile_images = loadImages();
+
     /**
      * constructor method for a chunk
      */
@@ -102,7 +103,7 @@ public class Chunk {
             }
 
             for (int j = height; j < c.tiles[i].length; j++) {  //for the num int between the height and the number of chunks
-                c.tiles[i][j] = (int) (1+(Math.random()+((double)(j-pHeight) / 100)));  //set to index of dirt Tile
+                c.tiles[i][j] = (int) (1 + (Math.random() + ((double) (j - pHeight) / 100)));  //set to index of dirt Tile
             }
 
         }
@@ -124,10 +125,10 @@ public class Chunk {
 
                     g2d.drawImage(tile_images[tiles[i][j]], dx + (tSize * i), dy + (tSize * j), null);
                     //System.out.println(dx + (tSize * i) + "," + dy + (tSize * j));
-                }else{
-                    if(i == 24){
-                    g2d.drawString("("+i+","+j+")",dx + (tSize * i), dy + (tSize * j));
-                  }
+                } else {
+                    if (i == 24) {
+                        g2d.drawString("(" + i + "," + j + ")", dx + (tSize * i), dy + (tSize * j));
+                    }
                 }
             }
         }
@@ -139,32 +140,34 @@ public class Chunk {
      * @param j - the index of the second dimension of the tiles array
      * @return - true if there is a block and false if not
      */
-    public boolean getSolid(int i,int j){
-        if(j>=0 && j<tiles[0].length && i<tiles.length){
-        return (tiles[i][j] != 0);
-        }else{
+    public boolean getSolid(int i, int j) {
+        if (j >= 0 && j < tiles[0].length && i < tiles.length) {
+            return (tiles[i][j] != 0);
+        } else {
             System.out.println(i);
             return true;
         }
     }
-    public boolean remove(int i,int j){
-        if(j>=0 && j<tiles[0].length && i<tiles.length){
-            if(tiles[i][j] !=0){
-            tiles[i][j] =0;
+
+    public boolean remove(int i, int j) {
+        if (j >= 0 && j < tiles[0].length && i < tiles.length) {
+            if (tiles[i][j] != 0) {
+                tiles[i][j] = 0;
             }
-        return true;
-        }else{
+            return true;
+        } else {
             return false;
         }
     }
-    public boolean place(int i,int j,int tile){
-        if(j>=0 && j<tiles[0].length && i<tiles.length){
-            if(tiles[i][j] ==0){
-            tiles[i][j] =tile;
+
+    public boolean place(int i, int j, int tile) {
+        if (j >= 0 && j < tiles[0].length && i < tiles.length) {
+            if (tiles[i][j] == 0) {
+                tiles[i][j] = tile;
             }
-        return true;
-        }else{
-            
+            return true;
+        } else {
+
             return false;
         }
     }

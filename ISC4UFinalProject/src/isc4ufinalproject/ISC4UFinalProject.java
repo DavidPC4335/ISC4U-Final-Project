@@ -12,16 +12,18 @@ import javax.swing.JFrame;
  *
  * @author david
  */
-public class ISC4UFinalProject extends JFrame{
-    public ISC4UFinalProject(){
+public class ISC4UFinalProject extends JFrame {
+
+    public ISC4UFinalProject() {
         setTitle("Final Project!");
-        setSize(600,600);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        setSize(600, 600);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         //setUndecorated(true);//for Sull screen
         add(new Surface());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
+
     /**
      * @param args the command line arguments
      */
