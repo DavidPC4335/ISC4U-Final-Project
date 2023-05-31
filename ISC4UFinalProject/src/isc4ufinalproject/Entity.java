@@ -107,7 +107,7 @@ public abstract class Entity {
     }
 
     /**
-     *
+     * method for
      */
     public void step() {
         prevX = x;

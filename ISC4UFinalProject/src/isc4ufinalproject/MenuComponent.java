@@ -13,7 +13,6 @@ import java.awt.Graphics2D;
  */
 public abstract class MenuComponent {
 
-
     protected int x, y;  //declaring protected ints
 
     /**

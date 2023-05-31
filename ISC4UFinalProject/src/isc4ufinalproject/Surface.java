@@ -111,9 +111,9 @@ public class Surface extends JPanel implements Runnable {
     public Menu getTitleMenu() {
         Menu m = new Menu(this);
         m.setVisibleBackground(true);
-        
+
         Button newWorld = new Button(920, 500, 200, 100, "New World", m);
-        
+
         //setting the action for the "New world button to generate new world
         newWorld.setAction(new Runnable() {
 

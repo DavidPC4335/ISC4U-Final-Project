@@ -17,28 +17,29 @@ import javax.swing.JOptionPane;
  *
  * @author dapav8190
  */
-public class Menu implements MouseListener{
+public class Menu implements MouseListener {
 
     private ArrayList<MenuComponent> components;
     private boolean clicked;
-    private double mx,my;
+    private double mx, my;
     private Surface gameSurface;
     public static final BufferedImage BACKGROUND = loadImages();
     boolean drawBackground = false;
-    public Menu(Surface gameSurface){
-        this.gameSurface =gameSurface;
-        mx=0;my=0;
+
+    public Menu(Surface gameSurface) {
+        this.gameSurface = gameSurface;
+        mx = 0;
+        my = 0;
         components = new ArrayList();
         clicked = false;
     }
-    public Menu(ArrayList<MenuComponent> list,Surface gameSurface){
+
+    public Menu(ArrayList<MenuComponent> list, Surface gameSurface) {
         this(gameSurface);
         components = list;
     }
-    
-    
-    
-        /**
+
+    /**
      * method that loads the desired image into an image array
      *
      * @return - the array full of the desired buffered image
@@ -54,45 +55,39 @@ public class Menu implements MouseListener{
         }
         return b;   //return the loaded image array
     }
-    
-    
-    
-    
-    
-    
-    public void add(MenuComponent m){
+
+    public void add(MenuComponent m) {
         components.add(m);
     }
-    public void draw(Graphics2D g2d){
-        if(drawBackground){
-            g2d.drawImage(BACKGROUND,0,0,gameSurface.getWidth(),gameSurface.getHeight(),null);
+
+    public void draw(Graphics2D g2d) {
+        if (drawBackground) {
+            g2d.drawImage(BACKGROUND, 0, 0, gameSurface.getWidth(), gameSurface.getHeight(), null);
         }
-        
-        for (int i = 0; i <components.size(); i++) {
+
+        for (int i = 0; i < components.size(); i++) {
             MenuComponent m = components.get(i);
             m.draw(g2d);
-            if(m instanceof Button){
-                if(((Button)m).checkClick(mx,my,clicked)){
-                    ((Button)m).run();
+            if (m instanceof Button) {
+                if (((Button) m).checkClick(mx, my, clicked)) {
+                    ((Button) m).run();
                 }
             }
         }
-        if (clicked){clicked = false;}
+        if (clicked) {
+            clicked = false;
+        }
     }
-    
-    public void setMousePos(double mx,double my){
-        this.mx= mx;
+
+    public void setMousePos(double mx, double my) {
+        this.mx = mx;
         this.my = my;
     }
-    
-    public void setVisibleBackground(boolean v){
+
+    public void setVisibleBackground(boolean v) {
         drawBackground = v;
     }
-    
-    
-    
-    
-    
+
     @Override
     public void mouseClicked(MouseEvent e) {
     }
@@ -113,6 +108,5 @@ public class Menu implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {
     }
-    
-    
+
 }

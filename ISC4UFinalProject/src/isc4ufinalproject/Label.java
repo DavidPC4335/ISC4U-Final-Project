@@ -42,7 +42,7 @@ public class Label extends MenuComponent {
     public Label(int x, int y, int txtSz, String txt) {
         this.x = x;
         this.y = y;
-         textSize = txtSz;
+        textSize = txtSz;
         text = txt;
     }
 

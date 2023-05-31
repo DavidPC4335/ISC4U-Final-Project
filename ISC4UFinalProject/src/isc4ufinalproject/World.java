@@ -48,10 +48,8 @@ public class World implements KeyListener, MouseListener {
 
     public void draw(Graphics2D g2d) {
         /*DRAWING BACKGROUND*/
-        g2d.drawImage(background,0,0,1920,1080,null);
-        
-        
-        
+        g2d.drawImage(background, 0, 0, 1920, 1080, null);
+
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.drawString(debugMessage, 10, 10);
@@ -101,44 +99,43 @@ public class World implements KeyListener, MouseListener {
         int roundY = (int) Math.round(e.getY() + yoff);
         int i = (roundX % Chunk.WIDTH) / Chunk.tSize;
         int j = (roundY + Chunk.Y) / Chunk.tSize;
-        int tempi =i;
+        int tempi = i;
         int chunkI = getChunki(roundX);
         Chunk chunkOn = chunks[chunkI];
-        debugMessage+="chunki("+chunkI+","+i+") ";
-        
+        debugMessage += "chunki(" + chunkI + "," + i + ") ";
+
         Rectangle bounds = e.getBounds();
         //checking Y collision
 
-         for (int k = 0; k <= (bounds.getWidth() / Chunk.tSize); k++) {//repeat for height
-             chunkOn = chunks[getChunki(e.getX() + xoff+(Chunk.tSize*k))];
-             tempi = ((roundX+(Chunk.tSize*(k))) % Chunk.WIDTH) / Chunk.tSize;
-             
-        if (yoff > 0) {
-            if (chunkOn.getSolid(tempi, j + (int) (bounds.getHeight() / Chunk.tSize))) {
-                collided = true;
-            }
-        } else if (yoff < 0) {
-            if (chunkOn.getSolid(tempi, j)) {
-                collided = true;
+        for (int k = 0; k <= (bounds.getWidth() / Chunk.tSize); k++) {//repeat for height
+            chunkOn = chunks[getChunki(e.getX() + xoff + (Chunk.tSize * k))];
+            tempi = ((roundX + (Chunk.tSize * (k))) % Chunk.WIDTH) / Chunk.tSize;
+
+            if (yoff > 0) {
+                if (chunkOn.getSolid(tempi, j + (int) (bounds.getHeight() / Chunk.tSize))) {
+                    collided = true;
+                }
+            } else if (yoff < 0) {
+                if (chunkOn.getSolid(tempi, j)) {
+                    collided = true;
+                }
             }
         }
-         }
         //checking X collision
         for (int k = 0; k <= (bounds.getHeight() / Chunk.tSize); k++) {//repeat for height
 
-             chunkOn = chunks[getChunki(roundX)];
-        if (xoff > 0) {
-            
-            //tempi = (i)%25;
- 
-            if (chunkOn.getSolid(i, j+k)) {
-                collided = true;
+            chunkOn = chunks[getChunki(roundX)];
+            if (xoff > 0) {
+
+                //tempi = (i)%25;
+                if (chunkOn.getSolid(i, j + k)) {
+                    collided = true;
+                }
+            } else {
+                if (chunkOn.getSolid(i, j + k)) {
+                    collided = true;
+                }
             }
-        } else {
-            if (chunkOn.getSolid(i, j+k)) {
-                collided = true;
-            }
-        }
         }
 
         return collided;
@@ -155,8 +152,7 @@ public class World implements KeyListener, MouseListener {
         int i = getChunki(x);
         drawChunks = getVisibleChunks(x);
 
-        i = updateWorld(i,x);
-        
+        i = updateWorld(i, x);
 
         chunkScreenX = ((i * Chunk.WIDTH) - x);//get the player X on the screen
         chunkScreenY = (Chunk.Y - y) + player_screen_y;
