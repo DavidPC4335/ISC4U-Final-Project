@@ -5,7 +5,7 @@
  */
 package isc4ufinalproject;
 
-import static isc4ufinalproject.Menu.BACKGROUND;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
  */
 public class World implements KeyListener, MouseListener {
 
+    private Surface surface;
     private double player_screen_y = 540, player_screen_x = 930;//playerX and player YU
     private double mx, my;
     private double xmove = 0, ymove = 0, moveSpeed = 1;
@@ -39,16 +40,22 @@ public class World implements KeyListener, MouseListener {
     //visuals
     private Image background;
 
-    public World() {
+    private Item[] inventory = new Item[4];
+    
+    private int selected = 0;
+    
+    public World(Surface surface) {
+        this.surface = surface;
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
         player = new Player(WIDTH / 2, 0, this);
         entities.add(player);
         background = Menu.BACKGROUND;
+        inventory[0] = new Item("Dirt","From the ground!",true,1);
     }
 
     public void draw(Graphics2D g2d) {
         /*DRAWING BACKGROUND*/
-        g2d.drawImage(background,0,0,1920,1080,null);
+        g2d.drawImage(background,0,0,surface.getWidth(),surface.getHeight(),null);
         
         
         
@@ -65,9 +72,37 @@ public class World implements KeyListener, MouseListener {
         }
         player.move(xmove, ymove);
         player.draw(g2d, player_screen_x, player_screen_y);
+        
+        drawUI(g2d);
 
     }
 
+    public void drawUI(Graphics2D g2d){
+        //drawing hotbar
+        int dx,dy = 20;
+        for (int i = 0; i < 4; i++) {
+            dx = 20+(i*60);
+             g2d.setColor(Color.gray);
+            if(new Rectangle(dx,dy,50,50).contains(getMouseScreenPos())){
+                g2d.setColor(Color.darkGray);
+                System.out.println(i);
+            }
+           
+            g2d.fillRect(dx,dy,50,50);
+            if(inventory[i] != null){
+                g2d.drawImage(inventory[i].getImage(),dx,dy,50,50,null);
+            }
+            
+            
+            if(i==selected){
+                g2d.setStroke(new BasicStroke(5));
+                g2d.setColor(Color.YELLOW);
+                g2d.drawRect(dx,dy,50,50);
+                g2d.setStroke(new BasicStroke(2));
+            }
+        }
+    }
+    
     public int updateWorld(int i, double x) {
         if ((i == 49 || i == 0) && x < 500) {//edge cases for end of world
             i = 0;

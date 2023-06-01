@@ -21,9 +21,9 @@ import javax.swing.JOptionPane;
 public class Player extends Entity {
 
     public final int MAXSPEED = 3;
-    private double animationSpeed = 0.1;
     public Player(double x, double y, World world) {
         super(x, y, 32, 64, world);
+        animationSpeed = 0.2;
 
     }
 
@@ -32,22 +32,27 @@ public class Player extends Entity {
         if(facing == -1){
             xoff = 75;
         }
-        g2d.drawImage(moving[1],(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
+        g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
         //g2d.drawRect((int) x, (int) y, (int) hitBox.getWidth(), (int) hitBox.getHeight());
     }
     
-    public static void loadImages() {
+    public BufferedImage[] loadImages() {
         BufferedImage running[] = new BufferedImage[8];   //initializind image array
         try {
             BufferedImage readImg; 
+            jump = ImageIO.read(Chunk.class.getResourceAsStream("characterJump.png")); //load the dirt sprite as a buffered image
+            
             for (int i = 0; i < running.length; i++) {
                 running[i] = ImageIO.read(Chunk.class.getResourceAsStream("characterRun-"+i+".png")); //load the dirt sprite as a buffered image
             }
+            down = running[3];
+            standing = ImageIO.read(Chunk.class.getResourceAsStream("characterStanding.png")); //load the dirt sprite as a buffered image;
             
 
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
+        return running;
     }
     
 

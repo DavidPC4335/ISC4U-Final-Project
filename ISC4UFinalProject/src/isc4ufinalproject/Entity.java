@@ -9,7 +9,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -23,10 +23,10 @@ public abstract class Entity {
     protected World world;
     public static final double GRAVITY = 0.2;   //initializing the gravity constant
     protected int facing = 1;
-    protected static Image moving[];
-    protected static Image standing;
-    protected int animationFrame =0;
-    protected Image drawImage; 
+    protected Image[] moving = loadImages();
+    protected Image standing;
+    protected double animationFrame =0;
+    protected Image drawImage,jump,down; 
     boolean isCollided = false; //set the collided variable to false
 
     protected double animationSpeed =0.1;
@@ -40,9 +40,7 @@ public abstract class Entity {
     public abstract void draw(Graphics2D g2d, double x, double y);
     
     
-    public static void loadImages(){
-        
-    }
+    public abstract BufferedImage[] loadImages();
 
     /**
      * abstract constructor method of entity
@@ -53,7 +51,7 @@ public abstract class Entity {
         xspd = 0;
         yspd = 0;
         hitBox = new Rectangle(new Dimension(50, 50));//sets hitbox to new square 50x50
-        loadImages();
+        
         drawImage = standing;
     }
 
@@ -147,10 +145,19 @@ public abstract class Entity {
         if(xspd*facing < 0){
             facing*=-1;
         }
-        drawImage = moving[animationFrame];
-        
+        animationFrame += animationSpeed;
+        if((int)animationFrame >= moving.length){animationFrame =0;}
+        drawImage = moving[(int)animationFrame];
         }else{
             drawImage = standing;
+        }
+        if(!world.checkCollision(this, 0, 1)){
+        if (yspd > GRAVITY){
+            drawImage = down;
+            
+        }else{
+            drawImage = jump;
+        }
         }
         
 

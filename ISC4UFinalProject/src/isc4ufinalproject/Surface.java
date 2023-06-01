@@ -22,7 +22,7 @@ public class Surface extends JPanel implements Runnable {
     private Thread animator;
     private final int DELAY = 15;
     private Point mp;
-    private World gameWorld = new World();
+    private World gameWorld = new World(this);
     private int focusScreen = 0;
     private Menu titleMenu = getTitleMenu();
 
