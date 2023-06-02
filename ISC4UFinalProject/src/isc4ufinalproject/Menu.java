@@ -74,6 +74,7 @@ public class Menu implements MouseListener{
             if(m instanceof Button){
                 if(((Button)m).checkClick(mx,my,clicked)){
                     ((Button)m).run();
+                    clicked = false;
                 }
             }
         }
@@ -95,15 +96,17 @@ public class Menu implements MouseListener{
     
     @Override
     public void mouseClicked(MouseEvent e) {
+         clicked = true;
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        clicked = true;
+       
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        clicked = false;
     }
 
     @Override

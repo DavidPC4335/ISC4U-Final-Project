@@ -28,6 +28,7 @@ public abstract class Entity {
     protected double animationFrame =0;
     protected Image drawImage,jump,down; 
     boolean isCollided = false; //set the collided variable to false
+    protected boolean animate = true;
 
     protected double animationSpeed =0.1;
     /**
@@ -141,12 +142,16 @@ public abstract class Entity {
             x -= xspd * 1.1;
             xspd = 0;
         }
+
+        if(animate){
+                    
+        animationFrame += animationSpeed;
+        if((int)animationFrame >= moving.length){animationFrame =0;}
         if(Math.abs(xspd)>0){
         if(xspd*facing < 0){
             facing*=-1;
         }
-        animationFrame += animationSpeed;
-        if((int)animationFrame >= moving.length){animationFrame =0;}
+        
         drawImage = moving[(int)animationFrame];
         }else{
             drawImage = standing;
@@ -157,6 +162,7 @@ public abstract class Entity {
             
         }else{
             drawImage = jump;
+        }
         }
         }
         

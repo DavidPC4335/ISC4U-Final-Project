@@ -33,8 +33,8 @@ public class Item {
         return this.imageIndex;
     }
     
-    public void setStack(int stack){
-        this.stack = stack;
+    public void setStack(int stackOff){
+        this.stack+=stackOff;
     }
     
     public int getStack(){
