@@ -9,8 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.IllegalComponentStateException;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -113,6 +112,8 @@ public class Surface extends JPanel implements Runnable {
         m.setVisibleBackground(true);
 
         Button newWorld = new Button(920, 500, 200, 100, "New World", m);
+        Button credits = new Button(920, 750, 200, 50, "Credits", m);
+
 
         //setting the action for the "New world button to generate new world
         newWorld.setAction(new Runnable() {
@@ -123,7 +124,17 @@ public class Surface extends JPanel implements Runnable {
 
             }
         });
+        //setting the action for the credits button to display the credits
+        credits.setAction(new Runnable() {
+
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(null, "David, Calum");
+
+            }
+        });
         m.add(newWorld);
+        m.add(credits);
         m.add(new Label(850, 100, 48, "Game name here"));
         return m;
     }
