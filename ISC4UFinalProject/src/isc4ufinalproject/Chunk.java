@@ -24,7 +24,7 @@ public class Chunk {
     public static final int tSize = 32, sHeight = 25, Y = 0;
     public static final int WIDTH = 25 * tSize;
     public static final double WEIGHT = 0.2;
-    private static Image[] tile_images = loadImages();
+    public static final Image[] tile_images = loadImages();
 
     /**
      * constructor method for a chunk
@@ -127,7 +127,7 @@ public class Chunk {
                     //System.out.println(dx + (tSize * i) + "," + dy + (tSize * j));
                 } else {
                     if (i == 24) {
-                        g2d.drawString("(" + i + "," + j + ")", dx + (tSize * i), dy + (tSize * j));
+                        //g2d.drawString("(" + i + "," + j + ")", dx + (tSize * i), dy + (tSize * j));
                     }
                 }
             }

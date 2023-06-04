@@ -92,10 +92,12 @@ public class Menu implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         clicked = true;
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+
     }
 
     @Override

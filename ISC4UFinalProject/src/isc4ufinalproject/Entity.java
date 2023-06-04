@@ -7,8 +7,9 @@ package isc4ufinalproject;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Shape;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -21,9 +22,15 @@ public abstract class Entity {
     protected Rectangle hitBox;
     protected World world;
     public static final double GRAVITY = 0.2;   //initializing the gravity constant
-
+    protected int facing = 1;
+    protected Image[] moving = loadImages();
+    protected Image standing;
+    protected double animationFrame =0;
+    protected Image drawImage,jump,down; 
     boolean isCollided = false; //set the collided variable to false
+    protected boolean animate = true;
 
+    protected double animationSpeed =0.1;
     /**
      * abstract draw method for any entity
      *
@@ -32,6 +39,9 @@ public abstract class Entity {
      * @param y - the y coord of the entity
      */
     public abstract void draw(Graphics2D g2d, double x, double y);
+    
+    
+    public abstract BufferedImage[] loadImages();
 
     /**
      * abstract constructor method of entity
@@ -42,6 +52,8 @@ public abstract class Entity {
         xspd = 0;
         yspd = 0;
         hitBox = new Rectangle(new Dimension(50, 50));//sets hitbox to new square 50x50
+        
+        drawImage = standing;
     }
 
     /**
@@ -121,6 +133,7 @@ public abstract class Entity {
         x += xspd;
         y += yspd;
         xspd *= 0.90;
+        if(Math.abs(xspd) < 0.3){xspd =0;}
         yspd += GRAVITY;
         if (world.checkCollision(this, 0, yspd)) {
             yspd = 0;
@@ -129,6 +142,30 @@ public abstract class Entity {
             x -= xspd * 1.1;
             xspd = 0;
         }
+
+        if(animate){
+                    
+        animationFrame += animationSpeed;
+        if((int)animationFrame >= moving.length){animationFrame =0;}
+        if(Math.abs(xspd)>0){
+        if(xspd*facing < 0){
+            facing*=-1;
+        }
+        
+        drawImage = moving[(int)animationFrame];
+        }else{
+            drawImage = standing;
+        }
+        if(!world.checkCollision(this, 0, 1)){
+        if (yspd > GRAVITY){
+            drawImage = down;
+            
+        }else{
+            drawImage = jump;
+        }
+        }
+        }
+        
 
     }
 

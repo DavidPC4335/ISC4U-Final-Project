@@ -5,7 +5,7 @@
  */
 package isc4ufinalproject;
 
-import static isc4ufinalproject.Menu.BACKGROUND;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
  */
 public class World implements KeyListener, MouseListener {
 
+    private Surface surface;
     private double player_screen_y = 540, player_screen_x = 930;//playerX and player YU
     private double mx, my;
     private double xmove = 0, ymove = 0, moveSpeed = 1;
@@ -39,31 +40,71 @@ public class World implements KeyListener, MouseListener {
     //visuals
     private Image background;
 
-    public World() {
+    private Item[] inventory = new Item[12];
+    private boolean showInventory = false;
+    private int selected = 0;
+
+    public World(Surface surface) {
+        this.surface = surface;
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
         player = new Player(WIDTH / 2, 0, this);
         entities.add(player);
         background = Menu.BACKGROUND;
+        inventory[0] = new Item("Dirt", "From the ground!", true, 1);
+        
+        entities.add(new PickupItem(WIDTH/2 + 100,0,inventory[0],this));
     }
 
     public void draw(Graphics2D g2d) {
         /*DRAWING BACKGROUND*/
-        g2d.drawImage(background, 0, 0, 1920, 1080, null);
+        g2d.drawImage(background, 0, 0, surface.getWidth(), surface.getHeight(), null);
+
 
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.drawString(debugMessage, 10, 10);
         debugMessage = "";
         drawWorld(g2d);
-        Entity e;
-        //setpping entities
-        for (int i = 0; i < entities.size(); i++) {//step all entities
-            e = entities.get(i);
-            e.step();
-        }
+        
         player.move(xmove, ymove);
         player.draw(g2d, player_screen_x, player_screen_y);
 
+        drawUI(g2d);
+
+    }
+
+    public void drawUI(Graphics2D g2d) {
+        //drawing hotbar
+        int dx, dy = 20;
+        int i;
+        for (i = 0; i < 4; i++) {
+            dx = 20 + (i * 60);
+            g2d.setColor(Color.gray);
+
+            g2d.fillRect(dx, dy, 50, 50);
+            if (inventory[i] != null) {
+                g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
+            }
+
+            if (i == selected) {
+                g2d.setStroke(new BasicStroke(5));
+                g2d.setColor(Color.YELLOW);
+                g2d.drawRect(dx, dy, 50, 50);
+                g2d.setStroke(new BasicStroke(2));
+            }
+        }
+        if (showInventory) {
+            for (i =i ;i < inventory.length; i++) {
+                dx = 20 + ((i%4) * 60);
+                if(i%4==0){dy+=60;}
+                g2d.setColor(Color.gray);
+
+                g2d.fillRect(dx, dy, 50, 50);
+                if (inventory[i] != null) {
+                    g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
+                }
+            }
+        }
     }
 
     public int updateWorld(int i, double x) {
@@ -153,10 +194,25 @@ public class World implements KeyListener, MouseListener {
         drawChunks = getVisibleChunks(x);
 
         i = updateWorld(i, x);
-
         chunkScreenX = ((i * Chunk.WIDTH) - x);//get the player X on the screen
         chunkScreenY = (Chunk.Y - y) + player_screen_y;
 
+        Entity e;
+        //setpping entities
+            double dx = ((i * Chunk.WIDTH) - x);//get the player X on the screen
+            double dy = (Chunk.Y - y) + player_screen_y;
+        for (int j = 0; j < entities.size(); j++) {//step all entities
+            e = entities.get(j);
+            if(!(e instanceof Player)){
+            dx = ((e.getX()) - x);
+            dy = (e.getY() - y) + player_screen_y;
+            e.draw(g2d, dx, dy);
+            }
+            e.step();
+        }
+        
+        
+        
         int index;
         for (int j = 0; j < 4; j++) {
             //System.out.println(chunkScreFenX + (Chunk.WIDTH * (j - 1)));
@@ -169,20 +225,19 @@ public class World implements KeyListener, MouseListener {
         int k = (m.y + Chunk.Y) / Chunk.tSize;
 
         int mi = getChunki(m.x);
-        boolean hovered = false;
         if (m.distance(new Point((int) player.getX(), (int) player.getY())) < 400) {
             g2d.setColor(Color.yellow);
             g2d.drawRect((int) (mi * Chunk.WIDTH - x + (j * Chunk.tSize)), (int) ((k * Chunk.tSize) - y + player_screen_y), Chunk.tSize, Chunk.tSize);
             g2d.setColor(Color.BLACK);
-        }
-        if (clicked) {
-            clicked = false;
-            if (chunks[mi].getSolid(j, k)) {
+            if (clicked) {
+                clicked = false;
+                if (chunks[mi].getSolid(j, k)) {
 
-                chunks[mi].remove(j, k);
+                    chunks[mi].remove(j, k);
 
-            } else if (canPlace) {
-                chunks[mi].place(j, k, 1);
+                } else if (canPlace) {
+                    chunks[mi].place(j, k, 1);
+                }
             }
         }
 
@@ -213,12 +268,36 @@ public class World implements KeyListener, MouseListener {
         return i;
     }
 
+    public void remove(Entity e){
+        entities.remove(e);
+    }
+    public void addItem(Item i){
+        for (int j = 0; j < inventory.length; j++) {
+            if(inventory[j].equals(i)){
+                inventory[j].setStack(1);
+                return;
+            }
+        }
+        for (int j = 0; j < inventory.length; j++) {
+             if(inventory[j] == null){
+                inventory[j] = i;
+                return;
+            }
+        }
+    }
+    
+    public Player getPlayer(){
+        return player;
+    }
     /**
      * abstract mentod from the listener that reads user inputs
      *
      * @param e event passed from user
      */
     public void keyPressed(KeyEvent e) {
+          
+        
+        
         switch (e.getKeyChar()) {
             case 'd':
                 xmove = moveSpeed;
@@ -229,11 +308,27 @@ public class World implements KeyListener, MouseListener {
             case 'w':
                 //ymove = -moveSpeed;
                 break;
-            case 's':
+            case '1':
+                selected = 0;
 
+                break;
+            case '2':
+                selected = 1;
+
+                break;
+            case '3':
+                selected = 2;
                 //ymove = moveSpeed;
                 break;
+            case '4':
+                selected = 3;
+                //ymove = moveSpeed;
+                break;
+            case 'i':
+                showInventory = !showInventory;
+                break;
         }
+
     }
 
     /**
@@ -268,11 +363,16 @@ public class World implements KeyListener, MouseListener {
         switch (e.getKeyChar()) {
 
             case 'w':
+               
                 if (checkCollision(player, 0, 1)) {
                     player.yspd = -8;
                 }
                 break;
         }
+        
+        
+      
+
     }
 
     public void setMousePos(double x, double y) {
