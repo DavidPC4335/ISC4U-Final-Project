@@ -133,6 +133,7 @@ public class Chunk {
             }
         }
     }
+
     /**
      * method for telling if a tile in a chunk is a physical block
      *
@@ -149,24 +150,39 @@ public class Chunk {
         }
     }
 
+    /**
+     * method for removing a tile at a desired point
+     *
+     * @param i - the index of the first dimension of the tiles array
+     * @param j - the index of the second dimension of the tiles array
+     * @return - T if indexes were valid and F if not
+     */
     public boolean remove(int i, int j) {
-        if (j >= 0 && j < tiles[0].length && i < tiles.length) {
-            if (tiles[i][j] != 0) {
-                tiles[i][j] = 0;
+        if (j >= 0 && j < tiles[0].length && i < tiles.length) {    //if the inputted indexes are within acceptable range
+            if (tiles[i][j] != 0) { //if there is a tile there to be removed
+                tiles[i][j] = 0;    //remove the tile
             }
             return true;
-        } else {
+        } else {    //if the indexes are not within acceptable range
             return false;
         }
     }
 
+    /**
+     * method for placing a tile at a desired point
+     *
+     * @param i - the index of the first dimension in the tiles array
+     * @param j - the index of the second dimension of the tiles array
+     * @param tile - the tile int value to be placed
+     * @return - T if a indexes were valid and F if not
+     */
     public boolean place(int i, int j, int tile) {
-        if (j >= 0 && j < tiles[0].length && i < tiles.length) {
-            if (tiles[i][j] == 0) {
-                tiles[i][j] = tile;
+        if (j >= 0 && j < tiles[0].length && i < tiles.length) {    // if the indexes are within acceptable range
+            if (tiles[i][j] == 0) { //if there is not a tile in the selected place
+                tiles[i][j] = tile; //place a tile in that place
             }
             return true;
-        } else {
+        } else {    //if the indexes are not within the acceptable range
 
             return false;
         }

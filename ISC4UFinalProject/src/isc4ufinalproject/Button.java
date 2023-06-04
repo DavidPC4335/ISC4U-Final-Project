@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+Calum M, David PC
+May 18 2023 - 
+Button class for getting pressed extends menu component
  */
 package isc4ufinalproject;
 
@@ -24,22 +25,23 @@ public class Button extends MenuComponent {
     private String text;
     private int txtSize;
     private Runnable action;
+
     /**
      * constructor method for a button
      *
      * @param width - the width of the rectangle
      * @param height - the height of the rectangle
      */
-    public Button(int x, int y, int width, int height,String text,Menu menu) {
-        this.x=x;
-        this.y=y;
+    public Button(int x, int y, int width, int height, String text, Menu menu) {
+        this.x = x;
+        this.y = y;
         this.text = text;
-         this.width = width;
+        this.width = width;
         this.height = height;
         butt = new Rectangle(x, y, width, height);    //instatiating rectangle button
         this.menu = menu;
-        
-        this.txtSize = height/3;
+
+        this.txtSize = height / 3;
     }
 
     /**
@@ -72,33 +74,41 @@ public class Button extends MenuComponent {
         return hovering(mouseX, mouseY) && clicked;
     }
 
-    public void setAction(Runnable r){
+    /**
+     * setter method for a runnable
+     *
+     * @param r - the desired runnable
+     */
+    public void setAction(Runnable r) {
         this.action = r;
     }
-    
-    public void run(){
-        if(action != null){
-        action.run();
+
+    /**
+     * run method for the button class
+     */
+    public void run() {
+        if (action != null) {   //if the runnable action is not null
+            action.run(); // run the action
         }
     }
+
     /**
      * draw method for the button
      *
      * @param g - the graphics to draw the button
      */
     public void draw(Graphics2D g) {
-        
+
         g.setColor(col);
-        if(hovered){
+        if (hovered) {
             g.setColor(col.darker());
         }
         g.fill(butt);
-        
-        
+
         g.setColor(Color.black);
         Font sFont = new Font("Consolas", Font.BOLD, txtSize);    //create new font of desired size
         g.setFont(sFont); //apply font to g2d
-        g.drawString(text, x+width/15, y+(height/10)+txtSize); //draw the string text with g2d at x,y
+        g.drawString(text, x + width / 15, y + (height / 10) + txtSize); //draw the string text with g2d at x,y
     }
 
     /**

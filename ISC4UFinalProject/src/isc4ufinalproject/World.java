@@ -59,6 +59,7 @@ public class World implements KeyListener, MouseListener {
         /*DRAWING BACKGROUND*/
         g2d.drawImage(background, 0, 0, surface.getWidth(), surface.getHeight(), null);
 
+
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.drawString(debugMessage, 10, 10);
@@ -193,7 +194,6 @@ public class World implements KeyListener, MouseListener {
         drawChunks = getVisibleChunks(x);
 
         i = updateWorld(i, x);
-        
         chunkScreenX = ((i * Chunk.WIDTH) - x);//get the player X on the screen
         chunkScreenY = (Chunk.Y - y) + player_screen_y;
 
