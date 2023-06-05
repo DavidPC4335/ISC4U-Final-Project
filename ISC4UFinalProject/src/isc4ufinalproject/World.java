@@ -50,9 +50,9 @@ public class World implements KeyListener, MouseListener {
         player = new Player(WIDTH / 2, 0, this);
         entities.add(player);
         background = Menu.BACKGROUND;
-        inventory[0] = new Item("Dirt", "From the ground!", true, 1);
-        Item stone = new Item("Stone","From the Ground",true,2);
-        entities.add(new PickupItem(WIDTH/2 + 100,0,stone,this));
+        inventory[0] = Item.PICKAXE;
+ 
+        
     }
 
     public void draw(Graphics2D g2d) {
@@ -87,6 +87,8 @@ public class World implements KeyListener, MouseListener {
             g2d.fillRect(dx, dy, 50, 50);
             if (inventory[i] != null) {
                 g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
+                g2d.setColor(Color.WHITE);
+                g2d.drawString(inventory[i].getStack()+"", dx+35,dy+45);
             }
 
             if (i == selected) {
@@ -235,14 +237,19 @@ public class World implements KeyListener, MouseListener {
             
             if (clicked) {
                 clicked = false;
-                if (chunks[mi].getSolid(j, k)) {
+                if (chunks[mi].getSolid(j, k) && inventory[selected]!=null) {
+                    if(inventory[selected].canMine()){
+                    entities.add(new PickupItem((m.x/32) * 32,(m.y/32) * 32,Item.blocks[chunks[mi].remove(j, k)],this));
+                    }
+                    
 
-                    chunks[mi].remove(j, k);
-
-                } else if (inventory[selected] != null) {
+                } else if (inventory[selected] != null) {//placing
                     if(inventory[selected].canPlace()){
                     chunks[mi].place(j, k, inventory[selected].getIndex());
                     inventory[selected].setStack(-1);
+                    if(inventory[selected].getStack() <=0){
+                        inventory[selected] = null;
+                    }
                     }
                 }
             }

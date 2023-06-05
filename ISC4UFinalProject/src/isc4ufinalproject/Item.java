@@ -20,8 +20,15 @@ public class Item {
     private String description;
     private boolean canUse;
     private int imageIndex=0;
-    private int stack =0;
-    
+    private int stack =1;
+    public static final Item[] blocks = {
+    new Item("Dirt", "From the ground!", true, 1),
+    new Item("Dirt", "From the ground!", true, 1),
+    new Item("Stone","From the Ground",true,2),
+    new Item("Grass","From the Dirt",true,3),
+    new Item("Sandstone","From the Desert",true,4)
+    };
+    public static final Item PICKAXE = new Item("Pickaxe","For miners only",true,Chunk.tile_images.length);
     public Item(String name,String description,boolean canUse,int imageIndex){
         this.name =name;
         this.description = description;
@@ -56,11 +63,12 @@ public class Item {
     public static Image[] loadImages() {
         Image images[] = new BufferedImage[7];   //initializind image array
         try {
-            images[0] = Chunk.tile_images[0];
-            images[1] = Chunk.tile_images[1];
-             images[2] = Chunk.tile_images[2];
-            images[3] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
-            images[4] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
+            int i;
+            for (i = 0; i < Chunk.tile_images.length; i++) {
+                images[i] = Chunk.tile_images[i];
+            }
+            images[i] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
+            images[i+1] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
@@ -75,6 +83,9 @@ public class Item {
         return icons[imageIndex];
     }
     public boolean canPlace(){
-        return (imageIndex >=0 && imageIndex <Chunk.tile_images.length);
+        return (imageIndex >=0 && imageIndex <Chunk.tile_images.length) && canUse;
+    }
+    public boolean canMine(){
+        return this.equals(PICKAXE);
     }
 }
