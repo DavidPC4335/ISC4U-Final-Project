@@ -15,13 +15,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author david
  */
-public class World implements KeyListener, MouseListener {
+public class World implements KeyListener, MouseListener, Serializable {
 
     private Surface surface;
     private double player_screen_y = 540, player_screen_x = 930;//playerX and player YU
