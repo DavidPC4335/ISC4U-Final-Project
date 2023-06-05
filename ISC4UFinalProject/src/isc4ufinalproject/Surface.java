@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.IllegalComponentStateException;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -107,26 +109,44 @@ public class Surface extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * getter method for the title menu for the game
+     *
+     * @return - the completed menu
+     */
     public Menu getTitleMenu() {
         Menu m = new Menu(this);
         m.setVisibleBackground(true);
 
-        Button newWorld = new Button(920, 500, 200, 100, "New World", m);
-        Button credits = new Button(920, 750, 200, 50, "Credits", m);
-
+        Button newWorld = new Button(850, 500, 200, 100, "New World", m);
+        Button credits = new Button(850, 750, 200, 50, "Credits", m);
+        Button cont = new Button(850, 625, 200, 100, "Continue", m);
 
         //setting the action for the "New world button to generate new world
         newWorld.setAction(() -> {
+            gameWorld = new World(this);
             focusScreen = 1;
         });
         //setting the action for the credits button to display the credits
         credits.setAction(() -> {
             JOptionPane.showMessageDialog(null, "David, Calum");
         });
-        m.add(newWorld);
-        m.add(credits);
-        m.add(new Label(850, 100, 48, "Game name here"));
-        return m;
+        //setting the action for the continue button to load a save
+        cont.setAction(() -> {
+            try {
+                FileInputStream in = new FileInputStream(System.getProperty("user.dir") + "/saves/save.world");
+                ObjectInputStream s = new ObjectInputStream(in);
+                gameWorld = (World)s.readObject();
+                focusScreen = 1;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "World not Found");
+            }
+        });
+        m.add(newWorld);    //adding new world button
+        m.add(credits); //adding credits utton
+        m.add(cont);    //adding continue button
+        m.add(new Label(850, 100, 48, "Terrarium"));    //labels the title screen
+        return m;   //returns the enu with all the added components
     }
 
     public void setScreen(int i) {
