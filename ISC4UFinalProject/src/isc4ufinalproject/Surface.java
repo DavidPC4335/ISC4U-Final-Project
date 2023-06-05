@@ -116,22 +116,12 @@ public class Surface extends JPanel implements Runnable {
 
 
         //setting the action for the "New world button to generate new world
-        newWorld.setAction(new Runnable() {
-
-            @Override
-            public void run() {
-                focusScreen = 1;
-
-            }
+        newWorld.setAction(() -> {
+            focusScreen = 1;
         });
         //setting the action for the credits button to display the credits
-        credits.setAction(new Runnable() {
-
-            @Override
-            public void run() {
-                JOptionPane.showMessageDialog(null, "David, Calum");
-
-            }
+        credits.setAction(() -> {
+            JOptionPane.showMessageDialog(null, "David, Calum");
         });
         m.add(newWorld);
         m.add(credits);

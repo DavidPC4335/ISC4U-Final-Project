@@ -30,6 +30,8 @@ public abstract class Entity {
     boolean isCollided = false; //set the collided variable to false
     protected boolean animate = true;
 
+    protected int screenX=0,screenY=0;
+    
     protected double animationSpeed =0.1;
     /**
      * abstract draw method for any entity
@@ -40,6 +42,9 @@ public abstract class Entity {
      */
     public abstract void draw(Graphics2D g2d, double x, double y);
     
+    public void draw(Graphics2D g2d){
+        draw(g2d,screenX,screenY);
+    }
     
     public abstract BufferedImage[] loadImages();
 
@@ -177,7 +182,18 @@ public abstract class Entity {
     public double getXSpd() {
         return x - prevX;
     }
-
+    
+    public void setScreenPos(int x,int y){
+        screenX = x;
+        screenY =y;
+    }
+    
+    public int getScreenX(){
+        return screenX;
+    }
+    public int getScreenY(){
+        return screenX;
+    }
     /**
      * setter method for the collided boolean
      *

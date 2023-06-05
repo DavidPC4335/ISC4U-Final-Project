@@ -64,14 +64,15 @@ public class Menu implements MouseListener {
         if (drawBackground) {
             g2d.drawImage(BACKGROUND, 0, 0, gameSurface.getWidth(), gameSurface.getHeight(), null);
         }
-
         for (int i = 0; i < components.size(); i++) {
             MenuComponent m = components.get(i);
             m.draw(g2d);
             if (m instanceof Button) {
                 if (((Button) m).checkClick(mx, my, clicked)) {
-                    ((Button) m).run();
                     clicked = false;
+                    ((Button) m).run();
+                    
+                    
                 }
             }
         }
@@ -91,13 +92,13 @@ public class Menu implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        clicked = true;
+        
 
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        clicked = true;
     }
 
     @Override

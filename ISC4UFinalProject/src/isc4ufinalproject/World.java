@@ -62,12 +62,14 @@ public class World implements KeyListener, MouseListener {
 
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
+        g2d.setColor(Color.white);
         g2d.drawString(debugMessage, 10, 10);
         debugMessage = "";
         drawWorld(g2d);
         
         player.move(xmove, ymove);
-        player.draw(g2d, player_screen_x, player_screen_y);
+        player.setScreenPos((int)player_screen_x,(int)player_screen_y);
+        player.draw(g2d);
 
         drawUI(g2d);
 
@@ -204,9 +206,8 @@ public class World implements KeyListener, MouseListener {
         for (int j = 0; j < entities.size(); j++) {//step all entities
             e = entities.get(j);
             if(!(e instanceof Player)){
-            dx = ((e.getX()) - x);
-            dy = (e.getY() - y) + player_screen_y;
-            e.draw(g2d, dx, dy);
+            e.setScreenPos((int)((e.getX()) - x), (int)((e.getY() - y)+ player_screen_y));
+            e.draw(g2d);
             }
             e.step();
         }
