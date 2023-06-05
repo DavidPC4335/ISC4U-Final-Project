@@ -51,8 +51,8 @@ public class World implements KeyListener, MouseListener {
         entities.add(player);
         background = Menu.BACKGROUND;
         inventory[0] = new Item("Dirt", "From the ground!", true, 1);
-        
-        entities.add(new PickupItem(WIDTH/2 + 100,0,inventory[0],this));
+        Item stone = new Item("Stone","From the Ground",true,2);
+        entities.add(new PickupItem(WIDTH/2 + 100,0,stone,this));
     }
 
     public void draw(Graphics2D g2d) {
@@ -64,6 +64,7 @@ public class World implements KeyListener, MouseListener {
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.setColor(Color.white);
         g2d.drawString(debugMessage, 10, 10);
+       // g2d.drawString(mx+","+my,(int)mx,(int)my);
         debugMessage = "";
         drawWorld(g2d);
         
@@ -220,24 +221,29 @@ public class World implements KeyListener, MouseListener {
             drawChunks[j].draw(g2d, chunkScreenX + (Chunk.WIDTH * (j)), chunkScreenY);
             //g2d.drawString((i+j)+"",(int)chunkScreenX+500+(Chunk.WIDTH * (j)),500);
         }
+        //handling placing and mining
         Point m = getMouseScreenPos();
 
         int j = (m.x % Chunk.WIDTH) / Chunk.tSize;
         int k = (m.y + Chunk.Y) / Chunk.tSize;
 
         int mi = getChunki(m.x);
-        if (m.distance(new Point((int) player.getX(), (int) player.getY())) < 400) {
+        if (m.distance(new Point((int) player.getX(), (int) player.getY())) < 400) {//if close enough to player
             g2d.setColor(Color.yellow);
             g2d.drawRect((int) (mi * Chunk.WIDTH - x + (j * Chunk.tSize)), (int) ((k * Chunk.tSize) - y + player_screen_y), Chunk.tSize, Chunk.tSize);
             g2d.setColor(Color.BLACK);
+            
             if (clicked) {
                 clicked = false;
                 if (chunks[mi].getSolid(j, k)) {
 
                     chunks[mi].remove(j, k);
 
-                } else if (canPlace) {
-                    chunks[mi].place(j, k, 1);
+                } else if (inventory[selected] != null) {
+                    if(inventory[selected].canPlace()){
+                    chunks[mi].place(j, k, inventory[selected].getIndex());
+                    inventory[selected].setStack(-1);
+                    }
                 }
             }
         }
@@ -274,9 +280,11 @@ public class World implements KeyListener, MouseListener {
     }
     public void addItem(Item i){
         for (int j = 0; j < inventory.length; j++) {
+            if(inventory[j] != null){
             if(inventory[j].equals(i)){
                 inventory[j].setStack(1);
                 return;
+            }
             }
         }
         for (int j = 0; j < inventory.length; j++) {

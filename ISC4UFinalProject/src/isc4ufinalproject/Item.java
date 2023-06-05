@@ -35,6 +35,9 @@ public class Item {
     
     public void setStack(int stackOff){
         this.stack+=stackOff;
+        if(stack <=0){
+            //this = null;
+        }
     }
     
     public int getStack(){
@@ -51,12 +54,13 @@ public class Item {
      * @return - the array full of the desired buffered image
      */
     public static Image[] loadImages() {
-        Image images[] = new BufferedImage[4];   //initializind image array
+        Image images[] = new BufferedImage[7];   //initializind image array
         try {
             images[0] = Chunk.tile_images[0];
             images[1] = Chunk.tile_images[1];
-            images[2] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
+             images[2] = Chunk.tile_images[2];
             images[3] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
+            images[4] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
@@ -69,5 +73,8 @@ public class Item {
     
     public Image getImage(){
         return icons[imageIndex];
+    }
+    public boolean canPlace(){
+        return (imageIndex >=0 && imageIndex <Chunk.tile_images.length);
     }
 }

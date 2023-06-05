@@ -192,7 +192,7 @@ public abstract class Entity {
         return screenX;
     }
     public int getScreenY(){
-        return screenX;
+        return screenY;
     }
     /**
      * setter method for the collided boolean

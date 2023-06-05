@@ -30,7 +30,6 @@ public class PickupItem extends Entity{
         double yoff=Math.sin(t)/5;
         t+=0.1;
         double dist = new Point(screenX,screenY).distance(new Point((int)world.getPlayer().getScreenX(),(int)world.getPlayer().getScreenY()));
-        System.out.println((int)world.getPlayer().getScreenY() + ","+(screenY));
         if(dist<50){
             world.addItem(item);
             world.remove(this);
