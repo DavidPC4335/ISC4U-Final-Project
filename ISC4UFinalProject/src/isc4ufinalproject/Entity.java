@@ -25,14 +25,15 @@ public abstract class Entity {
     protected int facing = 1;
     protected Image[] moving = loadImages();
     protected Image standing;
-    protected double animationFrame =0;
-    protected Image drawImage,jump,down; 
+    protected double animationFrame = 0;
+    protected Image drawImage, jump, down;
     boolean isCollided = false; //set the collided variable to false
     protected boolean animate = true;
 
-    protected int screenX=0,screenY=0;
-    
-    protected double animationSpeed =0.1;
+    protected int screenX = 0, screenY = 0;
+
+    protected double animationSpeed = 0.1;
+
     /**
      * abstract draw method for any entity
      *
@@ -41,11 +42,11 @@ public abstract class Entity {
      * @param y - the y coord of the entity
      */
     public abstract void draw(Graphics2D g2d, double x, double y);
-    
-    public void draw(Graphics2D g2d){
-        draw(g2d,screenX,screenY);
+
+    public void draw(Graphics2D g2d) {
+        draw(g2d, screenX, screenY);
     }
-    
+
     public abstract BufferedImage[] loadImages();
 
     /**
@@ -57,7 +58,7 @@ public abstract class Entity {
         xspd = 0;
         yspd = 0;
         hitBox = new Rectangle(new Dimension(50, 50));//sets hitbox to new square 50x50
-        
+
         drawImage = standing;
     }
 
@@ -138,7 +139,9 @@ public abstract class Entity {
         x += xspd;
         y += yspd;
         xspd *= 0.90;
-        if(Math.abs(xspd) < 0.3){xspd =0;}
+        if (Math.abs(xspd) < 0.3) {
+            xspd = 0;
+        }
         yspd += GRAVITY;
         if (world.checkCollision(this, 0, yspd)) {
             yspd = 0;
@@ -148,29 +151,30 @@ public abstract class Entity {
             xspd = 0;
         }
 
-        if(animate){
-                    
-        animationFrame += animationSpeed;
-        if((int)animationFrame >= moving.length){animationFrame =0;}
-        if(Math.abs(xspd)>0){
-        if(xspd*facing < 0){
-            facing*=-1;
+        if (animate) {
+
+            animationFrame += animationSpeed;
+            if ((int) animationFrame >= moving.length) {
+                animationFrame = 0;
+            }
+            if (Math.abs(xspd) > 0) {
+                if (xspd * facing < 0) {
+                    facing *= -1;
+                }
+
+                drawImage = moving[(int) animationFrame];
+            } else {
+                drawImage = standing;
+            }
+            if (!world.checkCollision(this, 0, 1)) {
+                if (yspd > GRAVITY) {
+                    drawImage = down;
+
+                } else {
+                    drawImage = jump;
+                }
+            }
         }
-        
-        drawImage = moving[(int)animationFrame];
-        }else{
-            drawImage = standing;
-        }
-        if(!world.checkCollision(this, 0, 1)){
-        if (yspd > GRAVITY){
-            drawImage = down;
-            
-        }else{
-            drawImage = jump;
-        }
-        }
-        }
-        
 
     }
 
@@ -182,18 +186,36 @@ public abstract class Entity {
     public double getXSpd() {
         return x - prevX;
     }
-    
-    public void setScreenPos(int x,int y){
+
+    /**
+     * setter method for the screen position
+     *
+     * @param x - the x position
+     * @param y - the y position
+     */
+    public void setScreenPos(int x, int y) {
         screenX = x;
-        screenY =y;
+        screenY = y;
     }
-    
-    public int getScreenX(){
+
+    /**
+     * getter method for the screen x position
+     *
+     * @return - the screen x position
+     */
+    public int getScreenX() {
         return screenX;
     }
-    public int getScreenY(){
+
+    /**
+     * getter method for the screen y position
+     *
+     * @return - the screen y position
+     */
+    public int getScreenY() {
         return screenY;
     }
+
     /**
      * setter method for the collided boolean
      *

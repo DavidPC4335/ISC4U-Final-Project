@@ -26,6 +26,11 @@ public class Menu implements MouseListener {
     public static final BufferedImage BACKGROUND = loadImages();
     boolean drawBackground = false;
 
+    /**
+     * constructor method for a menu object
+     *
+     * @param gameSurface - the game surface that the menu will appear on
+     */
     public Menu(Surface gameSurface) {
         this.gameSurface = gameSurface;
         mx = 0;
@@ -34,6 +39,13 @@ public class Menu implements MouseListener {
         clicked = false;
     }
 
+    /**
+     * chained constructor method for a menu object
+     *
+     * @param list - the array list of menu components that the menu will
+     * contain
+     * @param gameSurface - the game surface that the menu will display on
+     */
     public Menu(ArrayList<MenuComponent> list, Surface gameSurface) {
         this(gameSurface);
         components = list;
@@ -56,43 +68,61 @@ public class Menu implements MouseListener {
         return b;   //return the loaded image array
     }
 
+    /**
+     * add method that adds a menu component to a menu
+     *
+     * @param m - the menu component to add
+     */
     public void add(MenuComponent m) {
         components.add(m);
     }
 
+    /**
+     * draw method for the menu
+     *
+     * @param g2d - the graphics engine to draw the menu
+     */
     public void draw(Graphics2D g2d) {
-        if (drawBackground) {
-            g2d.drawImage(BACKGROUND, 0, 0, gameSurface.getWidth(), gameSurface.getHeight(), null);
+        if (drawBackground) {   //if drawbackground is true
+            g2d.drawImage(BACKGROUND, 0, 0, gameSurface.getWidth(), gameSurface.getHeight(), null); //draw the background
         }
-        for (int i = 0; i < components.size(); i++) {
+        for (int i = 0; i < components.size(); i++) {   //for the number of times that components is long
             MenuComponent m = components.get(i);
             m.draw(g2d);
-            if (m instanceof Button) {
-                if (((Button) m).checkClick(mx, my, clicked)) {
+            if (m instanceof Button) {  //if 
+                if (((Button) m).checkClick(mx, my, clicked)) { //iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
                     clicked = false;
                     ((Button) m).run();
-                    
-                    
+
                 }
             }
         }
-        if (clicked) {
-            clicked = false;
+        if (clicked) {  //if clicked is true
+            clicked = false;    //set clicked to false
         }
     }
 
+    /**
+     * setter method for the mouse position
+     *
+     * @param mx - the desired mouse x
+     * @param my - the desired mouse y
+     */
     public void setMousePos(double mx, double my) {
         this.mx = mx;
         this.my = my;
     }
 
+    /**
+     * setter method for visible background
+     * @param v - the boolean for T/F if visible
+     */
     public void setVisibleBackground(boolean v) {
         drawBackground = v;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
 
     }
 
