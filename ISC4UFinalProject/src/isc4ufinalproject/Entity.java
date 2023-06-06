@@ -141,6 +141,7 @@ public abstract class Entity {
         if(Math.abs(xspd) < 0.3){xspd =0;}
         yspd += GRAVITY;
         if (world.checkCollision(this, 0, yspd)) {
+           if(yspd <0){ y-=yspd;}
             yspd = 0;
         }
         if (world.checkCollision(this, xspd, 0) || world.checkCollision(this, xspd + hitBox.getWidth(), 0)) {

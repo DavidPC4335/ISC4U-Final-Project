@@ -7,6 +7,7 @@ package isc4ufinalproject;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -42,7 +43,7 @@ public class World implements KeyListener, MouseListener, Serializable {
     private Image background;
 
     private Item[] inventory = new Item[12];
-    private boolean showInventory = false;
+    private boolean showInventory = false,init = false;
     private int selected = 0;
 
     public World(Surface surface) {
@@ -52,25 +53,29 @@ public class World implements KeyListener, MouseListener, Serializable {
         entities.add(player);
         background = Menu.BACKGROUND;
         inventory[0] = Item.PICKAXE;
- 
-        
+      
+
     }
 
     public void draw(Graphics2D g2d) {
+        if(!init){
+              player_screen_x = surface.getWidth()/2;
+        player_screen_y = surface.getHeight()/2;
+        init = false;
+        }
         /*DRAWING BACKGROUND*/
         g2d.drawImage(background, 0, 0, surface.getWidth(), surface.getHeight(), null);
-
 
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.setColor(Color.white);
         g2d.drawString(debugMessage, 10, 10);
-       // g2d.drawString(mx+","+my,(int)mx,(int)my);
+        // g2d.drawString(mx+","+my,(int)mx,(int)my);
         debugMessage = "";
         drawWorld(g2d);
-        
+
         player.move(xmove, ymove);
-        player.setScreenPos((int)player_screen_x,(int)player_screen_y);
+        player.setScreenPos((int) player_screen_x, (int) player_screen_y);
         player.draw(g2d);
 
         drawUI(g2d);
@@ -81,34 +86,57 @@ public class World implements KeyListener, MouseListener, Serializable {
         //drawing hotbar
         int dx, dy = 20;
         int i;
-        for (i = 0; i < 4; i++) {
-            dx = 20 + (i * 60);
-            g2d.setColor(Color.gray);
 
-            g2d.fillRect(dx, dy, 50, 50);
-            if (inventory[i] != null) {
-                g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
-                g2d.setColor(Color.WHITE);
-                g2d.drawString(inventory[i].getStack()+"", dx+35,dy+45);
-            }
-
-            if (i == selected) {
-                g2d.setStroke(new BasicStroke(5));
-                g2d.setColor(Color.YELLOW);
-                g2d.drawRect(dx, dy, 50, 50);
-                g2d.setStroke(new BasicStroke(2));
-            }
-        }
         if (showInventory) {
-            for (i =i ;i < inventory.length; i++) {
-                dx = 20 + ((i%4) * 60);
-                if(i%4==0){dy+=60;}
+            for (i = 0; i < inventory.length; i++) {
+                dx = 20 + ((i % 4) * 60);
+                if (i % 4 == 0 && i>0) {
+                    dy += 60;
+                }
+
+                g2d.setColor(Color.gray);
+                g2d.fillRect(dx, dy, 50, 50);
+                if (inventory[i] != null) {
+                    g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
+                }
+                if (i == selected) {
+                    g2d.setStroke(new BasicStroke(5));
+                    g2d.setColor(Color.YELLOW);
+                    g2d.drawRect(dx, dy, 50, 50);
+                    g2d.setStroke(new BasicStroke(2));
+                }
+                if (new Rectangle(dx, dy, 50, 50).contains(new Point((int) mx, (int) my))) {
+
+                    if (inventory[i] != null) {
+                        g2d.setColor(Color.white);
+                        Font sFont = new Font("Consolas", Font.BOLD, 20);    //create new font of desired size
+                        g2d.setFont(sFont); //apply font to g2d
+                        g2d.drawString(inventory[i].getName(), 270, 50);
+                        g2d.setFont(new Font("Consolas", Font.PLAIN, 15));
+                        g2d.drawString(inventory[i].getDescription(), 270, 75);
+                           //create new font of desired size
+                    }
+                }
+            }
+        } else {
+            for (i = 0; i < 4; i++) {
+                dx = 20 + (i * 60);
                 g2d.setColor(Color.gray);
 
                 g2d.fillRect(dx, dy, 50, 50);
                 if (inventory[i] != null) {
                     g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
+                    g2d.setColor(Color.WHITE);
+                    g2d.drawString(inventory[i].getStack() + "", dx + 35, dy + 45);
                 }
+
+                if (i == selected) {
+                    g2d.setStroke(new BasicStroke(5));
+                    g2d.setColor(Color.YELLOW);
+                    g2d.drawRect(dx, dy, 50, 50);
+                    g2d.setStroke(new BasicStroke(2));
+                }
+
             }
         }
     }
@@ -205,19 +233,17 @@ public class World implements KeyListener, MouseListener, Serializable {
 
         Entity e;
         //setpping entities
-            double dx = ((i * Chunk.WIDTH) - x);//get the player X on the screen
-            double dy = (Chunk.Y - y) + player_screen_y;
+        double dx = ((i * Chunk.WIDTH) - x);//get the player X on the screen
+        double dy = (Chunk.Y - y) + player_screen_y;
         for (int j = 0; j < entities.size(); j++) {//step all entities
             e = entities.get(j);
-            if(!(e instanceof Player)){
-            e.setScreenPos((int)((e.getX()) - x), (int)((e.getY() - y)+ player_screen_y));
-            e.draw(g2d);
+            if (!(e instanceof Player)) {
+                e.setScreenPos((int) ((e.getX()) - x), (int) ((e.getY() - y) + player_screen_y));
+                e.draw(g2d);
             }
             e.step();
         }
-        
-        
-        
+
         int index;
         for (int j = 0; j < 4; j++) {
             //System.out.println(chunkScreFenX + (Chunk.WIDTH * (j - 1)));
@@ -235,22 +261,21 @@ public class World implements KeyListener, MouseListener, Serializable {
             g2d.setColor(Color.yellow);
             g2d.drawRect((int) (mi * Chunk.WIDTH - x + (j * Chunk.tSize)), (int) ((k * Chunk.tSize) - y + player_screen_y), Chunk.tSize, Chunk.tSize);
             g2d.setColor(Color.BLACK);
-            
+
             if (clicked) {
                 clicked = false;
-                if (chunks[mi].getSolid(j, k) && inventory[selected]!=null) {
-                    if(inventory[selected].canMine()){
-                    entities.add(new PickupItem((m.x/32) * 32,(m.y/32) * 32,Item.blocks[chunks[mi].remove(j, k)],this));
+                if (chunks[mi].getSolid(j, k) && inventory[selected] != null) {
+                    if (inventory[selected].canMine()) {
+                        entities.add(new PickupItem((m.x / 32) * 32, (m.y / 32) * 32, Item.blocks[chunks[mi].remove(j, k)], this));
                     }
-                    
 
                 } else if (inventory[selected] != null) {//placing
-                    if(inventory[selected].canPlace()){
-                    chunks[mi].place(j, k, inventory[selected].getIndex());
-                    inventory[selected].setStack(-1);
-                    if(inventory[selected].getStack() <=0){
-                        inventory[selected] = null;
-                    }
+                    if (inventory[selected].canPlace()) {
+                        chunks[mi].place(j, k, inventory[selected].getIndex());
+                        inventory[selected].setStack(-1);
+                        if (inventory[selected].getStack() <= 0) {
+                            inventory[selected] = null;
+                        }
                     }
                 }
             }
@@ -283,38 +308,38 @@ public class World implements KeyListener, MouseListener, Serializable {
         return i;
     }
 
-    public void remove(Entity e){
+    public void remove(Entity e) {
         entities.remove(e);
     }
-    public void addItem(Item i){
+
+    public void addItem(Item i) {
         for (int j = 0; j < inventory.length; j++) {
-            if(inventory[j] != null){
-            if(inventory[j].equals(i)){
-                inventory[j].setStack(1);
-                return;
-            }
+            if (inventory[j] != null) {
+                if (inventory[j].equals(i)) {
+                    inventory[j].setStack(1);
+                    return;
+                }
             }
         }
         for (int j = 0; j < inventory.length; j++) {
-             if(inventory[j] == null){
+            if (inventory[j] == null) {
                 inventory[j] = i;
                 return;
             }
         }
     }
-    
-    public Player getPlayer(){
+
+    public Player getPlayer() {
         return player;
     }
+
     /**
      * abstract mentod from the listener that reads user inputs
      *
      * @param e event passed from user
      */
     public void keyPressed(KeyEvent e) {
-          
-        
-        
+
         switch (e.getKeyChar()) {
             case 'd':
                 xmove = moveSpeed;
@@ -380,15 +405,12 @@ public class World implements KeyListener, MouseListener, Serializable {
         switch (e.getKeyChar()) {
 
             case 'w':
-               
+
                 if (checkCollision(player, 0, 1)) {
                     player.yspd = -8;
                 }
                 break;
         }
-        
-        
-      
 
     }
 

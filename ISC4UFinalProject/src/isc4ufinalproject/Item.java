@@ -51,6 +51,14 @@ public class Item {
         return stack;
     }
     
+    public String getName(){
+        return name;
+    }
+    
+    public String getDescription(){
+        return description;
+    }
+    
     public boolean equals(Item other){
         return(this.canUse == other.canUse && this.name.equals(other.name));
     }

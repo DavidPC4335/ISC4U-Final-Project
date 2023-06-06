@@ -23,13 +23,13 @@ public class Surface extends JPanel implements Runnable {
     private Thread animator;
     private final int DELAY = 15;
     private Point mp;
-    private World gameWorld = new World(this);
+    private World gameWorld;
     private int focusScreen = 0;
     private Menu titleMenu = getTitleMenu();
 
     public Surface() {
-
         super();
+        gameWorld = new World(this);
         this.setFocusable(true);
         this.requestFocus();
         addKeyListener(gameWorld);
@@ -124,7 +124,7 @@ public class Surface extends JPanel implements Runnable {
 
         //setting the action for the "New world button to generate new world
         newWorld.setAction(() -> {
-            gameWorld = new World(this);
+            //gameWorld = new World(this);
             focusScreen = 1;
         });
         //setting the action for the credits button to display the credits
