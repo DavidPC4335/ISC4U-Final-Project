@@ -29,6 +29,7 @@ public abstract class Enemy extends Entity{
             yspd = -4;
         }
         if(hitCooldown<=0){
+           // hitBox.setLocation((int)x+(facing*50),(int)y);
         if(hitBox.contains(world.getPlayer().getBounds())){
             world.getPlayer().hit(damage);
             hitCooldown = 70;

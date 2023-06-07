@@ -43,6 +43,7 @@ public class World implements KeyListener, MouseListener, Serializable {
     private Chunk[] drawChunks;
     public static String debugMessage = "";
     private ArrayList<Entity> entities = new ArrayList();
+    private ArrayList<Particle> particles = new ArrayList();
     //visuals
     private Image background, heart;
 
@@ -92,6 +93,7 @@ public class World implements KeyListener, MouseListener, Serializable {
         player.setScreenPos((int) player_screen_x, (int) player_screen_y);
         player.draw(g2d);
         drawSwing(g2d);
+        drawParticles(g2d);
         drawUI(g2d);
 
     }
@@ -192,7 +194,23 @@ public class World implements KeyListener, MouseListener, Serializable {
             g2d.drawImage(heart, (surface.getWidth() - 250) + (j % 5) * 50, dy, 40, 40, null);
         }
     }
-
+    public void drawParticles(Graphics2D g2d){
+        ArrayList remove = new ArrayList();
+        
+        for (Particle p : particles) {
+            
+            if (p.getActive()) {
+                p.draw(g2d);
+                
+            }else{
+                remove.add(p);
+            }
+        }
+        for (Object p : remove) {
+            particles.remove(p);
+        }
+        
+    }
     public int updateWorld(int i, double x) {
         if ((i == 49 || i == 0) && x < 500) {//edge cases for end of world
             i = 0;
@@ -229,7 +247,7 @@ public class World implements KeyListener, MouseListener, Serializable {
         int tempi = i;
         int chunkI = getChunki(roundX);
         Chunk chunkOn = chunks[chunkI];
-        debugMessage += "chunki(" + chunkI + "," + i + ") ";
+     
 
         Rectangle bounds = e.getBounds();
         //checking Y collision
@@ -480,6 +498,17 @@ public class World implements KeyListener, MouseListener, Serializable {
 
     }
 
+    public void addParticles(int num,int x, int y,Color col){
+        for (int i = 0; i < num; i++) {
+             
+            particles.add(new Particle(x,y,col));
+            
+        }
+        
+    }
+    public ArrayList<Particle> getParticles(){
+        return particles;
+    }
     public void setMousePos(double x, double y) {
         this.mx = x;
         this.my = y;

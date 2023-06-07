@@ -31,7 +31,10 @@ public class Bomber extends Enemy{
         if(facing == -1){
             xoff = 75;
         }
+        
         g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
+        g2d.draw(hitBox);
+        g2d.draw(world.getPlayer().getBounds());
     }
 
     @Override

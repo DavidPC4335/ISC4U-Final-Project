@@ -58,6 +58,9 @@ public class Player extends Entity {
         hp-=damage;
         if(hp<=0){
             System.out.println("dead");
+        }else{
+           world.getParticles().add(new Particle(screenX,screenY));
+            world.addParticles(10,screenX,screenY , Color.red);
         }
     }
     public void attack(int damage,int reach){

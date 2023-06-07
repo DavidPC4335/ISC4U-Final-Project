@@ -127,7 +127,7 @@ public abstract class Entity {
      * method for
      */
     public void step() {
-        hitBox.setLocation((int)x, (int)y);
+        hitBox.setLocation((int)screenX, (int)screenY);
         prevX = x;
         if (x + xspd * 2 < 0) {
             x = 0;
