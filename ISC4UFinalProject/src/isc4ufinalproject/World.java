@@ -24,6 +24,7 @@ import java.util.ArrayList;
  */
 public class World implements KeyListener, MouseListener, Serializable {
 
+    //declaring and initializing private variables and final variables
     private Surface surface;
     private double player_screen_y = 540, player_screen_x = 930;//playerX and player YU
     private double mx, my;
@@ -45,35 +46,41 @@ public class World implements KeyListener, MouseListener, Serializable {
     private boolean showInventory = false;
     private int selected = 0;
 
+    /**
+     * constructor method for the world
+     * @param surface - the surface that the world exists on
+     */
     public World(Surface surface) {
-        this.surface = surface;
+        this.surface = surface; //copying info from surface to "this" surface
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
-        player = new Player(WIDTH / 2, 0, this);
-        entities.add(player);
-        background = Menu.BACKGROUND;
-        inventory[0] = new Item("Dirt", "From the ground!", true, 1);
-        Item stone = new Item("Stone","From the Ground",true,2);
-        entities.add(new PickupItem(WIDTH/2 + 100,0,stone,this));
+        player = new Player(WIDTH / 2, 0, this);    //instantiating a player
+        entities.add(player);   //adding player to entity array list
+        background = Menu.BACKGROUND;   //setting the background
+        inventory[0] = new Item("Dirt", "From the ground!", true, 1);   //addng inventory item to the first slot
     }
 
+    /**
+     * draw method for the world
+     * @param g2d - the graphic to draw the world
+     */
     public void draw(Graphics2D g2d) {
         /*DRAWING BACKGROUND*/
         g2d.drawImage(background, 0, 0, surface.getWidth(), surface.getHeight(), null);
 
 
-        debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
+        debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;    //displays debug information
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.setColor(Color.white);
-        g2d.drawString(debugMessage, 10, 10);
+        g2d.drawString(debugMessage, 10, 10);   //draws the debug message
        // g2d.drawString(mx+","+my,(int)mx,(int)my);
         debugMessage = "";
-        drawWorld(g2d);
+        drawWorld(g2d); //draws the world
         
-        player.move(xmove, ymove);
-        player.setScreenPos((int)player_screen_x,(int)player_screen_y);
-        player.draw(g2d);
+        player.move(xmove, ymove);  //moves the player
+        player.setScreenPos((int)player_screen_x,(int)player_screen_y); //setst he screen position to revolve around the player
+        player.draw(g2d);   //draws the player
 
-        drawUI(g2d);
+        drawUI(g2d); // draws the UI (inventory etc)
 
     }
 

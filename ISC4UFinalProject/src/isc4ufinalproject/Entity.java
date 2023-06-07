@@ -43,10 +43,20 @@ public abstract class Entity {
      */
     public abstract void draw(Graphics2D g2d, double x, double y);
 
+    /**
+     * draw method for an entity
+     *
+     * @param g2d - the graphics that will draw the entity
+     */
     public void draw(Graphics2D g2d) {
         draw(g2d, screenX, screenY);
     }
 
+    /**
+     * abstract method for loading buffered images into an array
+     *
+     * @return - the loaded buffered image array
+     */
     public abstract BufferedImage[] loadImages();
 
     /**

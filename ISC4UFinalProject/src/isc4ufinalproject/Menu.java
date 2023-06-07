@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class Menu implements MouseListener {
 
+    //declaring and initializing private variables
     private ArrayList<MenuComponent> components;
     private boolean clicked;
     private double mx, my;
@@ -87,12 +88,12 @@ public class Menu implements MouseListener {
             g2d.drawImage(BACKGROUND, 0, 0, gameSurface.getWidth(), gameSurface.getHeight(), null); //draw the background
         }
         for (int i = 0; i < components.size(); i++) {   //for the number of times that components is long
-            MenuComponent m = components.get(i);
-            m.draw(g2d);
-            if (m instanceof Button) {  //if 
-                if (((Button) m).checkClick(mx, my, clicked)) { //iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-                    clicked = false;
-                    ((Button) m).run();
+            MenuComponent m = components.get(i); // set the menu component m to the menu compontnt at index 1 of the components aray list
+            m.draw(g2d);    //draw the component
+            if (m instanceof Button) {  //if m is a button component
+                if (((Button) m).checkClick(mx, my, clicked)) { //if button is clicked
+                    clicked = false;    //set the button to not clicked
+                    ((Button) m).run(); //runs the fuction that button m controls
 
                 }
             }
@@ -115,31 +116,37 @@ public class Menu implements MouseListener {
 
     /**
      * setter method for visible background
+     *
      * @param v - the boolean for T/F if visible
      */
     public void setVisibleBackground(boolean v) {
         drawBackground = v;
     }
 
+    // mouse clicked keylistener
     @Override
     public void mouseClicked(MouseEvent e) {
 
     }
 
+    // mouse pressed keylistener
     @Override
     public void mousePressed(MouseEvent e) {
-        clicked = true;
+        clicked = true; //set clicked = to true
     }
 
+    // mouse release keylistener
     @Override
     public void mouseReleased(MouseEvent e) {
-        clicked = false;
+        clicked = false; // set clicked to false
     }
-
+    
+    // mouse entered keylistener
     @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    // mouse exited keylistener
     @Override
     public void mouseExited(MouseEvent e) {
     }
