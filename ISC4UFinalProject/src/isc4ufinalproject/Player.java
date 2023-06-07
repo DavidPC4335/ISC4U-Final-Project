@@ -5,13 +5,11 @@
  */
 package isc4ufinalproject;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,6 +19,7 @@ import javax.swing.JOptionPane;
 public class Player extends Entity {
 
     public final int MAXSPEED = 3;
+    private int hp = 10;
     public Player(double x, double y, World world) {
         super(x, y, 32, 64, world);
         animationSpeed = 0.2;
@@ -55,7 +54,25 @@ public class Player extends Entity {
         return running;
     }
     
-
+    public void hit(int damage){
+        hp-=damage;
+        if(hp<=0){
+            System.out.println("dead");
+        }
+    }
+    public void attack(int damage,int reach){
+        for (Entity e : world.getEntities()) {
+            if(e instanceof Enemy){
+                if(hitBox.contains(e.getBounds())){
+                    
+                }
+            }
+        }
+    }
+    public int getHP(){
+        return hp;
+    }
+    
     public void move(double xmove, double ymove) {
         if (Math.abs(xspd) < MAXSPEED) {
             xspd += xmove;

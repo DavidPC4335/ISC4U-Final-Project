@@ -74,7 +74,7 @@ public abstract class Entity {
         this();
         this.x = x;
         this.y = y;
-        this.hitBox = new Rectangle(new Dimension(width, height));  //sets hitbox to desired specifications
+        this.hitBox = new Rectangle((int)x,(int)y,width,height);  //sets hitbox to desired specifications
         this.world = world;
     }
 
@@ -127,6 +127,7 @@ public abstract class Entity {
      * method for
      */
     public void step() {
+        hitBox.setLocation((int)x, (int)y);
         prevX = x;
         if (x + xspd * 2 < 0) {
             x = 0;

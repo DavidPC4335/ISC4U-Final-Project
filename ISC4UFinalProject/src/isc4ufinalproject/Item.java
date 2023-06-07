@@ -21,6 +21,8 @@ public class Item {
     private boolean canUse;
     private int imageIndex=0;
     private int stack =1;
+    private int damage = 3;
+    private double drawScale =1;
     public static final Item[] blocks = {
     new Item("Dirt", "From the ground!", true, 1),
     new Item("Dirt", "From the ground!", true, 1),
@@ -29,11 +31,16 @@ public class Item {
     new Item("Sandstone","From the Desert",true,4)
     };
     public static final Item PICKAXE = new Item("Pickaxe","For miners only",true,Chunk.tile_images.length);
+    public static final Item SWORD = new Item("Sword","pointy metal stick",true,Chunk.tile_images.length+1,1.4);
     public Item(String name,String description,boolean canUse,int imageIndex){
         this.name =name;
         this.description = description;
         this.canUse = canUse;
         this.imageIndex =imageIndex;
+    }
+    public Item(String name,String description,boolean canUse,int imageIndex,double drawScale){
+        this(name,description,canUse,imageIndex);
+        this.drawScale = drawScale;
     }
     
     public int getIndex(){
@@ -58,9 +65,14 @@ public class Item {
     public String getDescription(){
         return description;
     }
-    
+    public int getDamage(){
+        return damage;
+    }
     public boolean equals(Item other){
         return(this.canUse == other.canUse && this.name.equals(other.name));
+    }
+    public double getDrawScale(){
+        return drawScale;
     }
     
     /**
@@ -69,14 +81,15 @@ public class Item {
      * @return - the array full of the desired buffered image
      */
     public static Image[] loadImages() {
-        Image images[] = new BufferedImage[7];   //initializind image array
+        Image images[] = new BufferedImage[8];   //initializind image array
         try {
             int i;
             for (i = 0; i < Chunk.tile_images.length; i++) {
                 images[i] = Chunk.tile_images[i];
             }
             images[i] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
-            images[i+1] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
+            images[i+1] = ImageIO.read(Chunk.class.getResourceAsStream("sword.png")); //load the dirt sprite as a buffered image
+            images[i+2] = ImageIO.read(Chunk.class.getResourceAsStream("knopesh.png")); //load the dirt sprite as a buffered image
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
@@ -95,5 +108,8 @@ public class Item {
     }
     public boolean canMine(){
         return this.equals(PICKAXE);
+    }
+    public boolean canAttack(){
+        return imageIndex>Chunk.tile_images.length;
     }
 }
