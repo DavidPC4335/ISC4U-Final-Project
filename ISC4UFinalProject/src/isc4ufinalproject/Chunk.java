@@ -119,8 +119,12 @@ public class Chunk {
         
         for (int i = 0; i <25; i++) {
             for (int j = pHeight; j < 50; j++) {
-                if((i==12|| i==13) && j<=25){
+                if((i==12|| i==13) && j<=26){
+                    if(j<24){
                     c.tiles[i][j] = 5;
+                    }else{
+                        c.tiles[i][j] =0;
+                    }
                 }else{
                 if(Math.abs(i-12)<j/2){//making pyramid shape
                 c.tiles[i][j] = 4;

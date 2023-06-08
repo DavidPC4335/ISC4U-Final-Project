@@ -47,13 +47,14 @@ public class World implements KeyListener, MouseListener, Serializable {
     private ArrayList<Particle> particles;
     //visuals
     private Image background, heart;
-    private char pressedChar=0;
+    private char pressedChar = 0;
     private Item[] inventory = new Item[12];
     private boolean showInventory = false, init = false;
-    private int selected = 0, swingFrames = 0,startSwing = 30;
+    private int selected = 0, swingFrames = 0, startSwing = 30;
 
     /**
      * constructor method for the world
+     *
      * @param surface - the surface that the world exists on
      */
     public World(Surface surface) {
@@ -66,10 +67,10 @@ public class World implements KeyListener, MouseListener, Serializable {
 
         inventory[0] = Item.PICKAXE;
         inventory[1] = Item.SWORD;
-        
-        for (int i=0;i<chunks.length;i++) {
-            if(chunks[i].isCastle()){
-                entities.add(new PickupItem((i*Chunk.WIDTH)+Chunk.WIDTH/2,Chunk.HEIGHT/2,Item.KHOPESH,this));
+
+        for (int i = 0; i < chunks.length; i++) {
+            if (chunks[i].isCastle()) {
+                entities.add(new PickupItem((i * Chunk.WIDTH) + Chunk.WIDTH / 2, Chunk.HEIGHT / 2, Item.KHOPESH, this));
             }
         }
 
@@ -86,6 +87,7 @@ public class World implements KeyListener, MouseListener, Serializable {
 
     /**
      * draw method for the world
+     *
      * @param g2d - the graphic to draw the world
      */
     public void draw(Graphics2D g2d) {
@@ -96,7 +98,6 @@ public class World implements KeyListener, MouseListener, Serializable {
         }
         /*DRAWING BACKGROUND*/
         g2d.drawImage(background, 0, 0, surface.getWidth(), surface.getHeight(), null);
-
 
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
@@ -122,20 +123,20 @@ public class World implements KeyListener, MouseListener, Serializable {
             if (inventory[selected].canMine() || inventory[selected].canAttack()) {
                 double scale = inventory[selected].getDrawScale();
                 AffineTransform backup = g2d.getTransform();
-                int dx = (int) player.getScreenX() + (10) - (int)(30*scale - 30), dy = (int) player.getScreenY() - 30 - (int)((50*scale)-50);
-                double swing = startSwing/10 - (double) swingFrames / 10;
+                int dx = (int) player.getScreenX() + (10) - (int) (30 * scale - 30), dy = (int) player.getScreenY() - 30 - (int) ((50 * scale) - 50);
+                double swing = startSwing / 10 - (double) swingFrames / 10;
                 if (player.facing == -1) {
                     dx -= 45;
                     swing = (double) swingFrames / 10;
                     swing -= Math.PI;
                 }
-                if(swingFrames == startSwing/2){
-                    player.attack(inventory[selected].getDamage(),(int)(60*scale*player.facing));
+                if (swingFrames == startSwing / 2) {
+                    player.attack(inventory[selected].getDamage(), (int) (60 * scale * player.facing));
                 }
-                AffineTransform a = AffineTransform.getRotateInstance(swing, dx + 30*scale, dy + 50*scale);
+                AffineTransform a = AffineTransform.getRotateInstance(swing, dx + 30 * scale, dy + 50 * scale);
                 g2d.setTransform(a);
                 //Draw our image like normal
-                g2d.drawImage(inventory[selected].getImage(), dx, dy, (int)(60*scale),(int)( 60*scale), null);
+                g2d.drawImage(inventory[selected].getImage(), dx, dy, (int) (60 * scale), (int) (60 * scale), null);
                 //Reset our graphics object so we can draw with it again.
                 g2d.setTransform(backup);
             }
@@ -161,49 +162,56 @@ public class World implements KeyListener, MouseListener, Serializable {
                 g2d.fillRect(dx, dy, 50, 50);
                 if (inventory[i] != null) {
                     g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
+                    
+
                 }
+                Font font = new Font("Consolas", Font.BOLD, 20);    //create new font of desired size
+                g2d.setFont(font); //apply font to g2d
+                g2d.setColor(Color.black);
+                g2d.drawString((i + 1) + "", dx, dy + 15);
                 if (i == selected) {
                     g2d.setStroke(new BasicStroke(5));
                     g2d.setColor(Color.YELLOW);
                     g2d.drawRect(dx, dy, 50, 50);
                     g2d.setStroke(new BasicStroke(2));
                 }
-                g2d.setFont(new Font("Consolas", Font.PLAIN, 15));
+                g2d.setFont(new Font("Consolas", Font.BOLD, 15));
                 g2d.setColor(Color.white);
-                g2d.drawString("1-4: Assign Hotbar Slot", 270, 145);
-                g2d.drawString("O : Destroy Item", 270, 165);
+                
+                g2d.drawString("1-4: Assign Hotbar Slot", 270, 95);
+                g2d.drawString("O : Destroy Item", 270, 115);
                 if (new Rectangle(dx, dy, 50, 50).contains(new Point((int) mx, (int) my))) {
-                    
+
                     if (inventory[i] != null) {
-                        if(clicked){selected = i;}
-                        if(pressedChar == 'o'){
+                        g2d.drawString(inventory[i].getStack() + "", dx + 35, dy + 45);
+                        if (clicked) {
+                            selected = i;
+                        }
+                        if (pressedChar == 'o') {
                             pressedChar = 0;
                             inventory[i] = null;
-                        }else{
-                            try{
-                                int num =Integer.parseInt(pressedChar+""); 
-                                if(num <=4 && num >0){
+                        } else {
+                            try {
+                                int num = Integer.parseInt(pressedChar + "");
+                                if (num <= 4 && num > 0) {
                                     Item temp;
-                                    temp = inventory[num-1];
-                                    inventory[num-1] = inventory[i];
+                                    temp = inventory[num - 1];
+                                    inventory[num - 1] = inventory[i];
                                     inventory[i] = temp;
                                     pressedChar = 0;
                                 }
-                            }catch(NumberFormatException e){
-                                
+                            } catch (NumberFormatException e) {
+
                             }
                         }
                         g2d.drawString(inventory[i].getDescription(), 270, 75);
                         Font sFont = new Font("Consolas", Font.BOLD, 20);    //create new font of desired size
                         g2d.setFont(sFont); //apply font to g2d
                         g2d.drawString(inventory[i].getName(), 270, 50);
-                        
-                        
-                        
-                        
+
                         //create new font of desired size
                     }
-                   
+
                 }
             }
         } else {
@@ -217,7 +225,10 @@ public class World implements KeyListener, MouseListener, Serializable {
                     g2d.setColor(Color.WHITE);
                     g2d.drawString(inventory[i].getStack() + "", dx + 35, dy + 45);
                 }
-
+                Font font = new Font("Consolas", Font.BOLD, 20);    //create new font of desired size
+                g2d.setFont(font); //apply font to g2d
+                g2d.setColor(Color.black);
+                g2d.drawString((i + 1) + "", dx, dy + 15);
                 if (i == selected) {
                     g2d.setStroke(new BasicStroke(5));
                     g2d.setColor(Color.YELLOW);
@@ -225,7 +236,10 @@ public class World implements KeyListener, MouseListener, Serializable {
                     g2d.setStroke(new BasicStroke(2));
                 }
 
-            }
+            
+            g2d.setFont(new Font("Consolas", Font.PLAIN, 15));
+                g2d.setColor(Color.white);
+                g2d.drawString("i: Open Inventory", 270, 35);}
         }
         dy = 20;
         //drawing hearts
@@ -236,27 +250,28 @@ public class World implements KeyListener, MouseListener, Serializable {
             g2d.drawImage(heart, (surface.getWidth() - 250) + (j % 5) * 50, dy, 40, 40, null);
         }
     }
-    public void drawParticles(Graphics2D g2d){
+
+    public void drawParticles(Graphics2D g2d) {
         ArrayList<Particle> remove = new ArrayList();
         //addParticles(500,500,10,Color.red);
         Particle p;
         for (int i = 0; i < particles.size(); i++) {
             p = particles.get(i);
-        
-            
+
             if (p.getActive()) {
-                
+
                 p.draw(g2d);
-                
-            }else{
+
+            } else {
                 remove.add(p);
             }
         }
         for (Particle pa : remove) {
             particles.remove(pa);
         }
-        
+
     }
+
     public int updateWorld(int i, double x) {
         if ((i == 49 || i == 0) && x < 500) {//edge cases for end of world
             i = 0;
@@ -293,7 +308,6 @@ public class World implements KeyListener, MouseListener, Serializable {
         int tempi = i;
         int chunkI = getChunki(roundX);
         Chunk chunkOn = chunks[chunkI];
-     
 
         Rectangle bounds = e.getBounds();
         //checking Y collision
@@ -351,8 +365,8 @@ public class World implements KeyListener, MouseListener, Serializable {
         //setpping entities
         double dx = ((i * Chunk.WIDTH) - x);//get the player X on the screen
         double dy = (Chunk.Y - y) + player_screen_y;
-        if(y>1090){
-            g2d.drawImage(Chunk.tile_images[0],0,(int)chunkScreenY+Chunk.HEIGHT,surface.getWidth()-10,surface.getHeight()/2, null);
+        if (y > 1090) {
+            g2d.drawImage(Chunk.tile_images[0], 0, (int) chunkScreenY + Chunk.HEIGHT, surface.getWidth() - 10, surface.getHeight() / 2, null);
         }
         for (int j = 0; j < entities.size(); j++) {//step all entities
             e = entities.get(j);
@@ -374,24 +388,24 @@ public class World implements KeyListener, MouseListener, Serializable {
 
         int j = (m.x % Chunk.WIDTH) / Chunk.tSize;
         int k = (m.y + Chunk.Y) / Chunk.tSize;
-        int pi = ((int)player.getX() % Chunk.WIDTH) / Chunk.tSize;
-        int pj = ((int)player.getY()+ Chunk.Y) / Chunk.tSize;
-        debugMessage+="("+pi+","+pj+")";
+        int pi = ((int) player.getX() % Chunk.WIDTH) / Chunk.tSize;
+        int pj = ((int) player.getY() + Chunk.Y) / Chunk.tSize;
+        debugMessage += "(" + pi + "," + pj + ")";
         int pIndex = getChunki(player.getX());
-        if(chunks[pIndex].isCastle()){
-            if(pi>11 && pi<17 && pj > 20){
-                int by = chunks[pIndex].getHeight()*Chunk.tSize;
+        if (chunks[pIndex].isCastle()) {
+            if (pi > 11 && pi < 17 && pj > 20) {
+                int by = chunks[pIndex].getHeight() * Chunk.tSize;
                 entities.add(new Bomber(player.getX() + 200, by, this));
                 entities.add(new Bomber(player.getX() - 200, by, this));
-                
+
                 chunks[pIndex].setCastle(false);
             }
         }
-        
+
         int mi = getChunki(m.x);
         if (inventory[selected] != null) {
             if (inventory[selected].canAttack()) {
-                if(clicked && swingFrames<=0){
+                if (clicked && swingFrames <= 0) {
                     swingFrames = 20;
                     startSwing = swingFrames;
                 }
@@ -410,7 +424,7 @@ public class World implements KeyListener, MouseListener, Serializable {
                                 entities.add(new PickupItem((m.x / 32) * 32, (m.y / 32) * 32, Item.blocks[chunks[mi].remove(j, k)], this));
                             }
 
-                        } else{//placing
+                        } else {//placing
                             if (inventory[selected].canPlace()) {
                                 chunks[mi].place(j, k, inventory[selected].getIndex());
                                 inventory[selected].setStack(-1);
@@ -469,7 +483,7 @@ public class World implements KeyListener, MouseListener, Serializable {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -483,7 +497,7 @@ public class World implements KeyListener, MouseListener, Serializable {
      * @param e event passed from user
      */
     public void keyPressed(KeyEvent e) {
-    pressedChar = e.getKeyChar();
+        pressedChar = e.getKeyChar();
         switch (e.getKeyChar()) {
             case 'd':
                 xmove = moveSpeed;
@@ -514,7 +528,7 @@ public class World implements KeyListener, MouseListener, Serializable {
                 showInventory = !showInventory;
                 break;
             case 'b':
-                
+
                 break;
         }
 
@@ -561,17 +575,19 @@ public class World implements KeyListener, MouseListener, Serializable {
 
     }
 
-    public void addParticles(int x, int y,int num,Color col){
+    public void addParticles(int x, int y, int num, Color col) {
         for (int i = 0; i < num; i++) {
-             
-            particles.add(new Particle(x,y+(i*2),col));
-            
+
+            particles.add(new Particle(x, y + (i * 2), col));
+
         }
-        
+
     }
-    public ArrayList<Particle> getParticles(){
+
+    public ArrayList<Particle> getParticles() {
         return particles;
     }
+
     public void setMousePos(double x, double y) {
         this.mx = x;
         this.my = y;
@@ -580,12 +596,10 @@ public class World implements KeyListener, MouseListener, Serializable {
     public Point getMouseScreenPos() {
         return new Point((int) (player.getX() + mx - player_screen_x), (int) (player.getY() + my - player_screen_y));
     }
-    
-    
-    public Surface getSurface(){
+
+    public Surface getSurface() {
         return surface;
     }
-    
 
     /**
      * abstract mentod from the listener that reads user inputs
@@ -605,11 +619,13 @@ public class World implements KeyListener, MouseListener, Serializable {
     @Override
     public void mousePressed(MouseEvent e) {
         clicked = true;
-        
+
     }
-    public ArrayList<Entity> getEntities(){
+
+    public ArrayList<Entity> getEntities() {
         return entities;
     }
+
     /**
      * abstract mentod from the listener that reads user inputs
      *
