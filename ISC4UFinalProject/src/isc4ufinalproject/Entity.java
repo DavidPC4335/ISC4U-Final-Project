@@ -1,4 +1,4 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -85,7 +85,7 @@ public abstract class Entity {
         this();
         this.x = x;
         this.y = y;
-        this.hitBox = new Rectangle((int)x,(int)y,width,height);  //sets hitbox to desired specifications
+        this.hitBox = new Rectangle((int) x, (int) y, width, height);  //sets hitbox to desired specifications
         this.world = world;
     }
 
@@ -135,14 +135,14 @@ public abstract class Entity {
     }
 
     /**
-     * method for
+     * method for an entity stepping
      */
     public void step() {
-        hitBox.setLocation((int)screenX, (int)screenY);
+        hitBox.setLocation((int) screenX, (int) screenY); //setting the hitbox to the correct location
         prevX = x;
-        if (x + xspd * 2 < 0) {
-            x = 0;
-        } else if (x + xspd * 2 > World.WIDTH - Chunk.tSize) {
+        if (x + xspd * 2 < 0) { //if player is going off edge of world
+            x = 0;  //don't let them
+        } else if (x + xspd * 2 > World.WIDTH - Chunk.tSize) {  //if 
 
             x = World.WIDTH - Chunk.tSize;
         }
@@ -150,40 +150,42 @@ public abstract class Entity {
         x += xspd;
         y += yspd;
         xspd *= 0.90;
-        if (Math.abs(xspd) < 0.3) {
-            xspd = 0;
+        if (Math.abs(xspd) < 0.3) { //if x spd is very very slow
+            xspd = 0;   //set to 0
         }
-        yspd += GRAVITY;
-        if (world.checkCollision(this, 0, yspd)) {
-           if(yspd <0){ y-=yspd;}
-            yspd = 0;
+        yspd += GRAVITY;    //add gravity to the y spd
+        if (world.checkCollision(this, 0, yspd)) {  //if 
+            if (yspd < 0) { //if y spd is less than 0
+                y -= yspd; // subtract the y spd from y
+            }
+            yspd = 0;   //set y spd  = to 0
         }
         if (world.checkCollision(this, xspd, 0) || world.checkCollision(this, xspd + hitBox.getWidth(), 0)) {
             x -= xspd * 1.1;
             xspd = 0;
         }
 
-        if (animate) {
+        if (animate) {  //if animate is true
 
-            animationFrame += animationSpeed;
-            if ((int) animationFrame >= moving.length) {
-                animationFrame = 0;
+            animationFrame += animationSpeed;   //add animation spd to the anaimation frame
+            if ((int) animationFrame >= moving.length) {    //if the animation frame is more than the legth of the moving array
+                animationFrame = 0; //set the animations frame to 0
             }
-            if (Math.abs(xspd) > 0) {
-                if (xspd * facing < 0) {
-                    facing *= -1;
+            if (Math.abs(xspd) > 0) {   //if absolute value of x spd is more than 0
+                if (xspd * facing < 0) {    //if the x spd times facing is less than 0
+                    facing *= -1;   //invert the direction of acing
                 }
 
-                drawImage = moving[(int) animationFrame];
-            } else {
-                drawImage = standing;
+                drawImage = moving[(int) animationFrame];   //draw the correct frame
+            } else { //if absolute value of x spd is less than 0 or equal to
+                drawImage = standing;   //draw the standing frame
             }
-            if (!world.checkCollision(this, 0, 1)) {
-                if (yspd > GRAVITY) {
-                    drawImage = down;
+            if (!world.checkCollision(this, 0, 1)) {    //if not collided with ground
+                if (yspd > GRAVITY) {   //if y spd is more than gravity
+                    drawImage = down;   //set gravity = to down
 
-                } else {
-                    drawImage = jump;
+                } else {    //if y spd is not more than gravity
+                    drawImage = jump;   //set the image to draw to jump frame
                 }
             }
         }

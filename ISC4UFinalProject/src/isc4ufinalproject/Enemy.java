@@ -10,61 +10,94 @@ import java.awt.Rectangle;
  *
  * @author dapav8190
  */
-public abstract class Enemy extends Entity{
-    
-    protected int damage,hp;
+public abstract class Enemy extends Entity {
+
+    //declaring and initializing protected variables
+    protected int damage, hp;
     protected double speed;
-    protected int hitCooldown=0;
-    
-    public Enemy(double x, double y,int width,int height, World world){
-        super(x,y,width,height,world);
+    protected int hitCooldown = 0;
+
+    /**
+     * constructor method for an enemy
+     *
+     * @param x - x position
+     * @param y - y position
+     * @param width - width of the enemy
+     * @param height - height of the enemy
+     * @param world - world that the enemy will exist in
+     */
+    public Enemy(double x, double y, int width, int height, World world) {
+        super(x, y, width, height, world);
     }
-    
-    public void step(){
-        super.step();
-       
-        
-        if (world.checkCollision(this, xspd*2, 0) || world.checkCollision(this, xspd*2 + hitBox.getWidth(), 0)) {
-            x -= xspd;
-            yspd = -4;
+
+    /**
+     * step method for an enemy
+     */
+    public void step() {
+        super.step();   //invoking the parent method
+
+        if (world.checkCollision(this, xspd * 2, 0) || world.checkCollision(this, xspd * 2 + hitBox.getWidth(), 0)) {   //if colliding with something while walking
+            x -= xspd;  //subtract x spd from x
+            yspd = -4;  //subtract 4 from y spd
         }
-        if(hitCooldown<=0){
-           // hitBox.setLocation((int)x+(facing*50),(int)y);
-        if(hitBox.contains(world.getPlayer().getBounds())){
-            world.getPlayer().hit(damage);
-            hitCooldown = 70;
-            this.xspd = -facing * 15;
-            yspd = -3;
-            world.getPlayer().move(facing * 10, -3);
-        }else{
-            xspd += ((double)sign((int)(world.getPlayer().getX()-x))/10) * speed;
+        if (hitCooldown <= 0) { //if the hit cooldown is less than or equal to 0
+            if (hitBox.contains(world.getPlayer().getBounds())) {   //if the hitbox is within bounds
+                world.getPlayer().hit(damage);  //
+                hitCooldown = 70;   //set the hit cooldown
+                this.xspd = -facing * 15;
+                yspd = -3;
+                world.getPlayer().move(facing * 10, -3);
+            } else {
+                xspd += ((double) sign((int) (world.getPlayer().getX() - x)) / 10) * speed;
+            }
+        } else {
+            hitCooldown--;
+
         }
-        }else{
-            hitCooldown --;
-             
-        }
-        
+
     }
-    
-    public int getDamage(){
+
+    /**
+     * getter method for enemy damage
+     *
+     * @return - the damage
+     */
+    public int getDamage() {
         return damage;
     }
-    
-    public int getHp(){
+
+    /**
+     * getter method for the enemy health
+     *
+     * @return - the enemy health
+     */
+    public int getHp() {
         return hp;
     }
-    public void hit(int damage){
-        hp-=damage;
-        if(hp<=0){
-            world.remove(this);
+
+    /**
+     * hit method for if the enemy is hit
+     *
+     * @param damage - the damage inflicted on the enemy
+     */
+    public void hit(int damage) {
+        hp -= damage; //subtract the inflicted from the healtg
+        if (hp <= 0) {  //if dead
+            world.remove(this);  //remove the enemy
         }
     }
-    public int sign(int x){
-        if(x!=0){
-        return x/Math.abs(x);
+
+    /**
+     * method for return the +/- sign of a number
+     *
+     * @param x - the number to check
+     * @return - -1,1,0
+     */
+    public int sign(int x) {
+        if (x != 0) {   //if x is not 0
+            return x / Math.abs(x); //return 1/ -1
         }
-        return 0;
+        return 0;   //return 0
     }
-        
-        
+
 }
