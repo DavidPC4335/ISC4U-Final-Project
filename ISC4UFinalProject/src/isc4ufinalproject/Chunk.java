@@ -22,7 +22,7 @@ public class Chunk {
     //initializinf private variables
     private int[][] tiles;
     public static final int tSize = 32, sHeight = 25, Y = 0;
-    public static final int WIDTH = 25 * tSize;
+    public static final int WIDTH = 25 * tSize,HEIGHT = 50*tSize;
     public static final double WEIGHT = 0.2;
     public static final Image[] tile_images = loadImages();
     private boolean isCastle = false;
@@ -204,6 +204,10 @@ public class Chunk {
     
     public void setCastle(boolean isCastle){
         this.isCastle = isCastle;
+    }
+    
+    public boolean isCastle(){
+        return isCastle;
     }
     /**
      * method for removing a tile at a desired point

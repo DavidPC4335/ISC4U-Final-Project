@@ -32,6 +32,7 @@ public class Item {
     };
     public static final Item PICKAXE = new Item("Pickaxe","For miners only",true,Chunk.tile_images.length);
     public static final Item SWORD = new Item("Sword","pointy metal stick",true,Chunk.tile_images.length+1,1.4);
+    public static final Item KHOPESH = new Item("Khopesh","Gold sword thingy with longer reach",true,Chunk.tile_images.length+2,1.8);
     public Item(String name,String description,boolean canUse,int imageIndex){
         this.name =name;
         this.description = description;
@@ -89,7 +90,7 @@ public class Item {
             }
             images[i] = ImageIO.read(Chunk.class.getResourceAsStream("pickaxe.png")); //load the dirt sprite as a buffered image
             images[i+1] = ImageIO.read(Chunk.class.getResourceAsStream("sword.png")); //load the dirt sprite as a buffered image
-            images[i+2] = ImageIO.read(Chunk.class.getResourceAsStream("knopesh.png")); //load the dirt sprite as a buffered image
+            images[i+2] = ImageIO.read(Chunk.class.getResourceAsStream("khopesh.png")); //load the dirt sprite as a buffered image
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }

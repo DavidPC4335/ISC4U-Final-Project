@@ -43,16 +43,17 @@ public class World implements KeyListener, MouseListener, Serializable {
     private Chunk[] drawChunks;
     public static String debugMessage = "";
     private ArrayList<Entity> entities = new ArrayList();
-    private ArrayList<Particle> particles = new ArrayList();
+    private ArrayList<Particle> particles;
     //visuals
     private Image background, heart;
-
+    private char pressedChar=0;
     private Item[] inventory = new Item[12];
     private boolean showInventory = false, init = false;
     private int selected = 0, swingFrames = 0,startSwing = 30;
 
     public World(Surface surface) {
         loadImages();
+        particles = new ArrayList();
         this.surface = surface;
         chunks = Chunk.generateWorld(25, chunks, 0);//generating world
         player = new Player(WIDTH / 2, 0, this);
@@ -60,6 +61,12 @@ public class World implements KeyListener, MouseListener, Serializable {
 
         inventory[0] = Item.PICKAXE;
         inventory[1] = Item.SWORD;
+        
+        for (int i=0;i<chunks.length;i++) {
+            if(chunks[i].isCastle()){
+                entities.add(new PickupItem((i*Chunk.WIDTH)+Chunk.WIDTH/2,Chunk.HEIGHT/2,Item.KHOPESH,this));
+            }
+        }
 
     }
 
@@ -105,7 +112,7 @@ public class World implements KeyListener, MouseListener, Serializable {
             if (inventory[selected].canMine() || inventory[selected].canAttack()) {
                 double scale = inventory[selected].getDrawScale();
                 AffineTransform backup = g2d.getTransform();
-                int dx = (int) player.getScreenX() + (10), dy = (int) player.getScreenY() - 30;
+                int dx = (int) player.getScreenX() + (10) - (int)(30*scale - 30), dy = (int) player.getScreenY() - 30 - (int)((50*scale)-50);
                 double swing = startSwing/10 - (double) swingFrames / 10;
                 if (player.facing == -1) {
                     dx -= 45;
@@ -140,7 +147,7 @@ public class World implements KeyListener, MouseListener, Serializable {
                     dy += 60;
                 }
 
-                g2d.setColor(Color.gray);
+                g2d.setColor(Color.gray.brighter());
                 g2d.fillRect(dx, dy, 50, 50);
                 if (inventory[i] != null) {
                     g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
@@ -151,17 +158,42 @@ public class World implements KeyListener, MouseListener, Serializable {
                     g2d.drawRect(dx, dy, 50, 50);
                     g2d.setStroke(new BasicStroke(2));
                 }
+                g2d.setFont(new Font("Consolas", Font.PLAIN, 15));
+                g2d.setColor(Color.white);
+                g2d.drawString("1-4: Assign Hotbar Slot", 270, 145);
+                g2d.drawString("O : Destroy Item", 270, 165);
                 if (new Rectangle(dx, dy, 50, 50).contains(new Point((int) mx, (int) my))) {
-
+                    
                     if (inventory[i] != null) {
-                        g2d.setColor(Color.white);
+                        if(clicked){selected = i;}
+                        if(pressedChar == 'o'){
+                            pressedChar = 0;
+                            inventory[i] = null;
+                        }else{
+                            try{
+                                int num =Integer.parseInt(pressedChar+""); 
+                                if(num <=4 && num >0){
+                                    Item temp;
+                                    temp = inventory[num-1];
+                                    inventory[num-1] = inventory[i];
+                                    inventory[i] = temp;
+                                    pressedChar = 0;
+                                }
+                            }catch(NumberFormatException e){
+                                
+                            }
+                        }
+                        g2d.drawString(inventory[i].getDescription(), 270, 75);
                         Font sFont = new Font("Consolas", Font.BOLD, 20);    //create new font of desired size
                         g2d.setFont(sFont); //apply font to g2d
                         g2d.drawString(inventory[i].getName(), 270, 50);
-                        g2d.setFont(new Font("Consolas", Font.PLAIN, 15));
-                        g2d.drawString(inventory[i].getDescription(), 270, 75);
+                        
+                        
+                        
+                        
                         //create new font of desired size
                     }
+                   
                 }
             }
         } else {
@@ -305,6 +337,9 @@ public class World implements KeyListener, MouseListener, Serializable {
         //setpping entities
         double dx = ((i * Chunk.WIDTH) - x);//get the player X on the screen
         double dy = (Chunk.Y - y) + player_screen_y;
+        if(y>1090){
+            g2d.drawImage(Chunk.tile_images[0],0,(int)chunkScreenY+Chunk.HEIGHT,surface.getWidth()-10,surface.getHeight()/2, null);
+        }
         for (int j = 0; j < entities.size(); j++) {//step all entities
             e = entities.get(j);
             if (!(e instanceof Player)) {
@@ -393,21 +428,23 @@ public class World implements KeyListener, MouseListener, Serializable {
         entities.remove(e);
     }
 
-    public void addItem(Item i) {
+    public boolean addItem(Item i) {
         for (int j = 0; j < inventory.length; j++) {
             if (inventory[j] != null) {
                 if (inventory[j].equals(i)) {
                     inventory[j].setStack(1);
-                    return;
+                    return true;
                 }
             }
         }
         for (int j = 0; j < inventory.length; j++) {
             if (inventory[j] == null) {
                 inventory[j] = i;
-                return;
+                return true;
             }
         }
+        
+        return false;
     }
 
     public Player getPlayer() {
@@ -420,7 +457,7 @@ public class World implements KeyListener, MouseListener, Serializable {
      * @param e event passed from user
      */
     public void keyPressed(KeyEvent e) {
-
+    pressedChar = e.getKeyChar();
         switch (e.getKeyChar()) {
             case 'd':
                 xmove = moveSpeed;

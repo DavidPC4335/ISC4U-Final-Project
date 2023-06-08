@@ -31,8 +31,9 @@ public class PickupItem extends Entity{
         t+=0.1;
         double dist = new Point(screenX,screenY).distance(new Point((int)world.getPlayer().getScreenX() + 10,(int)world.getPlayer().getScreenY() + 32));
         if(dist<40){
-            world.addItem(item);
+            if(world.addItem(item)){
             world.remove(this);
+            }
         }
         
         g2d.setColor(Color.white);
