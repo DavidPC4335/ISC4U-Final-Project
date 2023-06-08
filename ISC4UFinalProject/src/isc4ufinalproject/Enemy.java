@@ -4,6 +4,7 @@
  */
 package isc4ufinalproject;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 
 /**
@@ -30,7 +31,7 @@ public abstract class Enemy extends Entity{
         }
         if(hitCooldown<=0){
            // hitBox.setLocation((int)x+(facing*50),(int)y);
-        if(hitBox.contains(world.getPlayer().getBounds())){
+        if(hitBox.intersects(world.getPlayer().getBounds())){
             world.getPlayer().hit(damage);
             hitCooldown = 70;
             this.xspd = -facing * 15;
@@ -55,7 +56,10 @@ public abstract class Enemy extends Entity{
     }
     public void hit(int damage){
         hp-=damage;
+        hitCooldown = 70;
+        world.addParticles(screenX,screenY,10 , Color.red);
         if(hp<=0){
+            world.addParticles(screenX,screenY,10 , Color.red);
             world.remove(this);
         }
     }

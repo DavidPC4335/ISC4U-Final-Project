@@ -26,7 +26,7 @@ public class Chunk {
     public static final double WEIGHT = 0.2;
     public static final Image[] tile_images = loadImages();
     private boolean isCastle = false;
-
+    
     /**
      * constructor method for a chunk
      */
@@ -40,7 +40,7 @@ public class Chunk {
      * @return - the array full of the desired buffered image
      */
     public static BufferedImage[] loadImages() {
-        BufferedImage b[] = new BufferedImage[5];   //initializind image array
+        BufferedImage b[] = new BufferedImage[6];   //initializind image array
         try {
             BufferedImage dirt = ImageIO.read(Chunk.class.getResourceAsStream("dirt.jpg")); //load the dirt sprite as a buffered image
             BufferedImage stone = ImageIO.read(Chunk.class.getResourceAsStream("stone.jpg")); //load the dirt sprite as a buffered image
@@ -49,6 +49,7 @@ public class Chunk {
             b[2] = stone;
             b[3] = ImageIO.read(Chunk.class.getResourceAsStream("grass.png"));
             b[4] = ImageIO.read(Chunk.class.getResourceAsStream("sand.png"));
+            b[5] = ImageIO.read(Chunk.class.getResourceAsStream("otherSand.png"));
 
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
@@ -82,7 +83,7 @@ public class Chunk {
      * @return the int for number of tiles high the height of ground is at edge
      * of chunk
      */
-    private int getHeight() {
+    public int getHeight() {
         for (int i = 0; i < tiles[0].length; i++) { //for 50 times
             if (tiles[24][i] > 0) { //if a solid block is in place
                 return i;   //return the index of the block
@@ -103,25 +104,29 @@ public class Chunk {
          for (int i = 0; i <25; i++) {
             for (int j = pHeight-10; j < pHeight-6; j++) {
                 if(Math.abs(i-12)<j){//making pyramid shape
-                c.tiles[i][j] = 4;
+                c.tiles[i][j] = 5;
                 }
             }
         }
         for (int i = 5; i < 20; i++) {
-            c.tiles[i][pHeight-6] = 4;
+            c.tiles[i][pHeight-6] = 5;
             if(i==5 || i==19){
                 for (int j = pHeight-6; j < pHeight-3; j++) {
-                    c.tiles[i][j] = 4;
+                    c.tiles[i][j] = 5;
                 }
             }
         }
         
         for (int i = 0; i <25; i++) {
             for (int j = pHeight; j < 50; j++) {
+                if((i==12|| i==13) && j<=25){
+                    c.tiles[i][j] = 5;
+                }else{
                 if(Math.abs(i-12)<j/2){//making pyramid shape
                 c.tiles[i][j] = 4;
                 }else{
                     c.tiles[i][j] = (int) (1 + (Math.random() + ((double) (j - pHeight) / 100)));  //set to index of dirt Tile
+                }
                 }
             }
         }

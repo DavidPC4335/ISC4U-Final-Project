@@ -7,6 +7,7 @@ package isc4ufinalproject;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -20,6 +21,7 @@ public class Player extends Entity {
 
     public final int MAXSPEED = 3;
     private int hp = 10;
+    private int hitCooldown =0;
     public Player(double x, double y, World world) {
         super(x, y, 32, 64, world);
         animationSpeed = 0.2;
@@ -27,6 +29,9 @@ public class Player extends Entity {
     }
 
     public void draw(Graphics2D g2d, double x, double y) {
+         if(hitCooldown >0){
+             hitCooldown--;
+         }
         int xoff = -40,yoff = -20;
         if(facing == -1){
             xoff = 75;
@@ -57,19 +62,27 @@ public class Player extends Entity {
     public void hit(int damage){
         hp-=damage;
         if(hp<=0){
-            System.out.println("dead");
+            world.getSurface().setScreen(0);
+            world.getSurface().newWorld();
         }else{
-           world.getParticles().add(new Particle(screenX,screenY));
-            world.addParticles(10,screenX,screenY , Color.red);
+            world.addParticles(screenX,screenY,10 , Color.red);
         }
     }
     public void attack(int damage,int reach){
-        for (Entity e : world.getEntities()) {
+        if(hitCooldown <=0){
+        Rectangle hitZone = new Rectangle(screenX,screenY,reach,(int)hitBox.getBounds().getHeight());
+        Entity e;
+        for (int i=0;i<world.getEntities().size();i++) {
+            e = world.getEntities().get(i);
             if(e instanceof Enemy){
-                if(hitBox.contains(e.getBounds())){
-                    
+                        
+                if(e.getBounds().intersects(hitZone)){
+                    e.setSpeed(facing*14,-3);  
+                    ((Enemy) e).hit(damage);
+
                 }
             }
+        }
         }
     }
     public int getHP(){

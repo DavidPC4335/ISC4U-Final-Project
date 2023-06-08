@@ -189,7 +189,10 @@ public abstract class Entity {
         }
 
     }
-
+    public void setSpeed(double xspd,double yspd){
+        this.xspd = xspd;
+        this.yspd = yspd;
+    }
     /**
      * getter method for the x speed of the entity
      *

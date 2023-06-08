@@ -130,7 +130,7 @@ public class World implements KeyListener, MouseListener, Serializable {
                     swing -= Math.PI;
                 }
                 if(swingFrames == startSwing/2){
-                    player.attack(inventory[selected].getDamage(),0);
+                    player.attack(inventory[selected].getDamage(),(int)(60*scale*player.facing));
                 }
                 AffineTransform a = AffineTransform.getRotateInstance(swing, dx + 30*scale, dy + 50*scale);
                 g2d.setTransform(a);
@@ -237,19 +237,23 @@ public class World implements KeyListener, MouseListener, Serializable {
         }
     }
     public void drawParticles(Graphics2D g2d){
-        ArrayList remove = new ArrayList();
+        ArrayList<Particle> remove = new ArrayList();
+        //addParticles(500,500,10,Color.red);
+        Particle p;
+        for (int i = 0; i < particles.size(); i++) {
+            p = particles.get(i);
         
-        for (Particle p : particles) {
             
             if (p.getActive()) {
+                
                 p.draw(g2d);
                 
             }else{
                 remove.add(p);
             }
         }
-        for (Object p : remove) {
-            particles.remove(p);
+        for (Particle pa : remove) {
+            particles.remove(pa);
         }
         
     }
@@ -370,7 +374,20 @@ public class World implements KeyListener, MouseListener, Serializable {
 
         int j = (m.x % Chunk.WIDTH) / Chunk.tSize;
         int k = (m.y + Chunk.Y) / Chunk.tSize;
-
+        int pi = ((int)player.getX() % Chunk.WIDTH) / Chunk.tSize;
+        int pj = ((int)player.getY()+ Chunk.Y) / Chunk.tSize;
+        debugMessage+="("+pi+","+pj+")";
+        int pIndex = getChunki(player.getX());
+        if(chunks[pIndex].isCastle()){
+            if(pi>11 && pi<17 && pj > 20){
+                int by = chunks[pIndex].getHeight()*Chunk.tSize;
+                entities.add(new Bomber(player.getX() + 200, by, this));
+                entities.add(new Bomber(player.getX() - 200, by, this));
+                
+                chunks[pIndex].setCastle(false);
+            }
+        }
+        
         int mi = getChunki(m.x);
         if (inventory[selected] != null) {
             if (inventory[selected].canAttack()) {
@@ -428,7 +445,6 @@ public class World implements KeyListener, MouseListener, Serializable {
         }
         int i = x2 / Chunk.WIDTH;
         if (i == 50) {
-            System.out.println("50! " + x);
             return 49;
         }
         return i;
@@ -498,7 +514,7 @@ public class World implements KeyListener, MouseListener, Serializable {
                 showInventory = !showInventory;
                 break;
             case 'b':
-                entities.add(new Bomber(player.getX() + 200, player.getY(), this));
+                
                 break;
         }
 
@@ -545,10 +561,10 @@ public class World implements KeyListener, MouseListener, Serializable {
 
     }
 
-    public void addParticles(int num,int x, int y,Color col){
+    public void addParticles(int x, int y,int num,Color col){
         for (int i = 0; i < num; i++) {
              
-            particles.add(new Particle(x,y,col));
+            particles.add(new Particle(x,y+(i*2),col));
             
         }
         
@@ -564,6 +580,12 @@ public class World implements KeyListener, MouseListener, Serializable {
     public Point getMouseScreenPos() {
         return new Point((int) (player.getX() + mx - player_screen_x), (int) (player.getY() + my - player_screen_y));
     }
+    
+    
+    public Surface getSurface(){
+        return surface;
+    }
+    
 
     /**
      * abstract mentod from the listener that reads user inputs

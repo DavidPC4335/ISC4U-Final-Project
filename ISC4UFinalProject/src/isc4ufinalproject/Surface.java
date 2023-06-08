@@ -29,15 +29,25 @@ public class Surface extends JPanel implements Runnable {
 
     public Surface() {
         super();
-        gameWorld = new World(this);
+        newWorld();
+        
         this.setFocusable(true);
         this.requestFocus();
-        addKeyListener(gameWorld);
-        addMouseListener(gameWorld);
+        
         addMouseListener(titleMenu);
         //this.removeMouseListener(titleMenu);
     }
 
+    public void newWorld(){
+        if(gameWorld!= null){
+            removeKeyListener(gameWorld);
+            removeMouseListener(gameWorld);
+        }
+        gameWorld = new World(this);
+        addKeyListener(gameWorld);
+        addMouseListener(gameWorld);
+    }
+    
     public void addNotify() {
         super.addNotify();
         animator = new Thread(this);

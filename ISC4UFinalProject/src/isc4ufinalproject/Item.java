@@ -28,7 +28,8 @@ public class Item {
     new Item("Dirt", "From the ground!", true, 1),
     new Item("Stone","From the Ground",true,2),
     new Item("Grass","From the Dirt",true,3),
-    new Item("Sandstone","From the Desert",true,4)
+    new Item("Sand","From the Desert",true,4),
+    new Item("Sandstone","From the Desert Temple",true,5)
     };
     public static final Item PICKAXE = new Item("Pickaxe","For miners only",true,Chunk.tile_images.length);
     public static final Item SWORD = new Item("Sword","pointy metal stick",true,Chunk.tile_images.length+1,1.4);
@@ -82,7 +83,7 @@ public class Item {
      * @return - the array full of the desired buffered image
      */
     public static Image[] loadImages() {
-        Image images[] = new BufferedImage[8];   //initializind image array
+        Image images[] = new BufferedImage[9];   //initializind image array
         try {
             int i;
             for (i = 0; i < Chunk.tile_images.length; i++) {

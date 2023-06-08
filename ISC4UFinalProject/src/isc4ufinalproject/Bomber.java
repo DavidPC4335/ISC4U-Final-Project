@@ -20,7 +20,7 @@ public class Bomber extends Enemy{
      public Bomber(double x, double y, World world){
         super(x,y,45,64,world);
         damage = 3;
-        hp =1;
+        hp =10;
         speed = 3.5;
     }
     
@@ -33,8 +33,6 @@ public class Bomber extends Enemy{
         }
         
         g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
-        g2d.draw(hitBox);
-        g2d.draw(world.getPlayer().getBounds());
     }
 
     @Override

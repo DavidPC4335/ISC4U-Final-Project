@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
  * @author david
  */
 public class Particle {
-    private int alpha = ((int)Math.random()*255);
+    private int alpha = ((int)(Math.random()*255));
     private double x=0,y=0;
     private double xspd,yspd;
     private Color c = Color.red;
@@ -37,7 +37,7 @@ public class Particle {
             y+=yspd;
         alpha--;
         g2d.setColor(new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha));
-        g2d.drawOval((int)x,(int)y,10,10);
+        g2d.fillOval((int)x,(int)y,10,10);
         g2d.setColor(Color.white);
         }
     }
