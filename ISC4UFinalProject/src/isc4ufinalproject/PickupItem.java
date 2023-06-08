@@ -29,10 +29,11 @@ public class PickupItem extends Entity{
     public void draw(Graphics2D g2d, double x, double y) {
         double yoff=Math.sin(t)/5;
         t+=0.1;
-        double dist = new Point(screenX,screenY).distance(new Point((int)world.getPlayer().getScreenX(),(int)world.getPlayer().getScreenY()));
-        if(dist<50){
-            world.addItem(item);
+        double dist = new Point(screenX,screenY).distance(new Point((int)world.getPlayer().getScreenX() + 10,(int)world.getPlayer().getScreenY() + 32));
+        if(dist<40){
+            if(world.addItem(item)){
             world.remove(this);
+            }
         }
         
         g2d.setColor(Color.white);

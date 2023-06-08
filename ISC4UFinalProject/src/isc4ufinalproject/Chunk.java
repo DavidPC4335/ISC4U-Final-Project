@@ -22,9 +22,10 @@ public class Chunk {
     //initializinf private variables
     private int[][] tiles;
     public static final int tSize = 32, sHeight = 25, Y = 0;
-    public static final int WIDTH = 25 * tSize;
+    public static final int WIDTH = 25 * tSize,HEIGHT = 50*tSize;
     public static final double WEIGHT = 0.2;
     public static final Image[] tile_images = loadImages();
+    private boolean isCastle = false;
 
     /**
      * constructor method for a chunk
@@ -39,13 +40,15 @@ public class Chunk {
      * @return - the array full of the desired buffered image
      */
     public static BufferedImage[] loadImages() {
-        BufferedImage b[] = new BufferedImage[3];   //initializind image array
+        BufferedImage b[] = new BufferedImage[5];   //initializind image array
         try {
             BufferedImage dirt = ImageIO.read(Chunk.class.getResourceAsStream("dirt.jpg")); //load the dirt sprite as a buffered image
             BufferedImage stone = ImageIO.read(Chunk.class.getResourceAsStream("stone.jpg")); //load the dirt sprite as a buffered image
             b[0] = dirt;    //index 0 will not draw anything, bur must still contain an image
             b[1] = dirt;    //loads image to index 1
             b[2] = stone;
+            b[3] = ImageIO.read(Chunk.class.getResourceAsStream("grass.png"));
+            b[4] = ImageIO.read(Chunk.class.getResourceAsStream("sand.png"));
 
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
@@ -63,7 +66,11 @@ public class Chunk {
      */
     public static Chunk[] generateWorld(int pHeight, Chunk[] c, int i) {
         if (i < c.length) { //if the index to genererate is less than the hghest index in the array of chunks
+            if(i%5 ==0 && i>0){
+                c[i] = generateSandHouse(pHeight);
+            }else{
             c[i] = generateChunk(pHeight);  //generates a chuk of a set base height and adds it to chunk array at index i
+            }
             generateWorld(c[i].getHeight(), c, i + 1);
         }
         return c;   //return the chunk array;
@@ -83,7 +90,47 @@ public class Chunk {
         }
         return tiles.length;    //return the length of the tiles array
     }
-
+/**
+     * generates a chunk with a house
+     *
+     * @param pHeight height to start at
+     * @return generated chunk
+     */
+    public static Chunk generateSandHouse(int pHeight) {
+    Chunk c = new Chunk();
+    c.setCastle(true);
+    int pOff = 12;
+         for (int i = 0; i <25; i++) {
+            for (int j = pHeight-10; j < pHeight-6; j++) {
+                if(Math.abs(i-12)<j){//making pyramid shape
+                c.tiles[i][j] = 4;
+                }
+            }
+        }
+        for (int i = 5; i < 20; i++) {
+            c.tiles[i][pHeight-6] = 4;
+            if(i==5 || i==19){
+                for (int j = pHeight-6; j < pHeight-3; j++) {
+                    c.tiles[i][j] = 4;
+                }
+            }
+        }
+        
+        for (int i = 0; i <25; i++) {
+            for (int j = pHeight; j < 50; j++) {
+                if(Math.abs(i-12)<j/2){//making pyramid shape
+                c.tiles[i][j] = 4;
+                }else{
+                    c.tiles[i][j] = (int) (1 + (Math.random() + ((double) (j - pHeight) / 100)));  //set to index of dirt Tile
+                }
+            }
+        }
+        
+        
+        
+        return c;
+    
+    }
     /**
      * generates a chunk
      *
@@ -103,7 +150,11 @@ public class Chunk {
             }
 
             for (int j = height; j < c.tiles[i].length; j++) {  //for the num int between the height and the number of chunks
+                if(j == height){
+                    c.tiles[i][j] = 3;
+                }else{
                 c.tiles[i][j] = (int) (1 + (Math.random() + ((double) (j - pHeight) / 100)));  //set to index of dirt Tile
+                }
             }
 
         }
@@ -150,6 +201,14 @@ public class Chunk {
         }
     }
 
+    
+    public void setCastle(boolean isCastle){
+        this.isCastle = isCastle;
+    }
+    
+    public boolean isCastle(){
+        return isCastle;
+    }
     /**
      * method for removing a tile at a desired point
      *
@@ -157,14 +216,15 @@ public class Chunk {
      * @param j - the index of the second dimension of the tiles array
      * @return - T if indexes were valid and F if not
      */
-    public boolean remove(int i, int j) {
+    public int remove(int i, int j) {
         if (j >= 0 && j < tiles[0].length && i < tiles.length) {    //if the inputted indexes are within acceptable range
+            int temp = tiles[i][j];
             if (tiles[i][j] != 0) { //if there is a tile there to be removed
                 tiles[i][j] = 0;    //remove the tile
             }
-            return true;
+            return temp;
         } else {    //if the indexes are not within acceptable range
-            return false;
+            return 0;
         }
     }
 
