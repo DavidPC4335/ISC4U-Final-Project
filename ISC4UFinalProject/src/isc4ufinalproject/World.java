@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
  */
 public class World implements KeyListener, MouseListener, Serializable {
 
+    //declaring and initializing private variables and final variables
     private Surface surface;
     private double player_screen_y = 540, player_screen_x = 930;//playerX and player YU
     private double mx, my;
@@ -51,6 +52,10 @@ public class World implements KeyListener, MouseListener, Serializable {
     private boolean showInventory = false, init = false;
     private int selected = 0, swingFrames = 0,startSwing = 30;
 
+    /**
+     * constructor method for the world
+     * @param surface - the surface that the world exists on
+     */
     public World(Surface surface) {
         loadImages();
         particles = new ArrayList();
@@ -79,6 +84,10 @@ public class World implements KeyListener, MouseListener, Serializable {
         }
     }
 
+    /**
+     * draw method for the world
+     * @param g2d - the graphic to draw the world
+     */
     public void draw(Graphics2D g2d) {
         if (!init) {
             player_screen_x = surface.getWidth() / 2;
@@ -88,20 +97,21 @@ public class World implements KeyListener, MouseListener, Serializable {
         /*DRAWING BACKGROUND*/
         g2d.drawImage(background, 0, 0, surface.getWidth(), surface.getHeight(), null);
 
+
         debugMessage += "(X,Y): (" + (int) player.getX() + "," + (int) player.getY() + ") \t" + Chunk.Y;
         //g2d.drawString(getMouseScreenPos().toString() +"k"+k, (int)mx, (int)my);
         g2d.setColor(Color.white);
         g2d.drawString(debugMessage, 10, 10);
         // g2d.drawString(mx+","+my,(int)mx,(int)my);
         debugMessage = "";
-        drawWorld(g2d);
+        drawWorld(g2d);//draws the world
 
-        player.move(xmove, ymove);
+        player.move(xmove, ymove); //moves the player
         player.setScreenPos((int) player_screen_x, (int) player_screen_y);
-        player.draw(g2d);
-        drawSwing(g2d);
-        drawParticles(g2d);
-        drawUI(g2d);
+        player.draw(g2d);//draws the player
+        drawSwing(g2d);//draws swing weapon
+        drawParticles(g2d);//draws particles
+        drawUI(g2d);//draws UI
 
     }
 
