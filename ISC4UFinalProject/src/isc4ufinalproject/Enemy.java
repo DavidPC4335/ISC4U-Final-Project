@@ -4,6 +4,7 @@
  */
 package isc4ufinalproject;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 
 /**
@@ -30,15 +31,27 @@ public abstract class Enemy extends Entity {
         super(x, y, width, height, world);
     }
 
-    /**
-     * step method for an enemy
-     */
-    public void step() {
-        super.step();   //invoking the parent method
-
-        if (world.checkCollision(this, xspd * 2, 0) || world.checkCollision(this, xspd * 2 + hitBox.getWidth(), 0)) {   //if colliding with something while walking
-            x -= xspd;  //subtract x spd from x
-            yspd = -4;  //subtract 4 from y spd
+    
+    public void step(){
+        super.step();
+       
+        
+        if (world.checkCollision(this, xspd*2, 0) || world.checkCollision(this, xspd*2 + hitBox.getWidth(), 0)) {
+            x -= xspd;
+            yspd = -4;
+        }
+        if(hitCooldown<=0){
+           // hitBox.setLocation((int)x+(facing*50),(int)y);
+        if(hitBox.intersects(world.getPlayer().getBounds())){
+            world.getPlayer().hit(damage);
+            hitCooldown = 70;
+            this.xspd = -facing * 15;
+            yspd = -3;
+            world.getPlayer().move(facing * 10, -3);
+        }else{
+            if(Math.abs(xspd) < Math.abs(speed)){
+            xspd += ((double)sign((int)(world.getPlayer().getX()-x)));
+            }
         }
         if (hitCooldown <= 0) { //if the hit cooldown is less than or equal to 0
             if (hitBox.contains(world.getPlayer().getBounds())) {   //if the hitbox is within bounds
@@ -75,15 +88,20 @@ public abstract class Enemy extends Entity {
         return hp;
     }
 
+
     /**
      * hit method for if the enemy is hit
      *
      * @param damage - the damage inflicted on the enemy
      */
-    public void hit(int damage) {
-        hp -= damage; //subtract the inflicted from the healtg
-        if (hp <= 0) {  //if dead
-            world.remove(this);  //remove the enemy
+
+    public void hit(int damage){
+        hp-=damage;
+        hitCooldown = 70;
+        world.addParticles(screenX,screenY,10 , Color.red);
+        if(hp<=0){
+            world.addParticles(screenX,screenY,10 , Color.red);
+            world.remove(this);
         }
     }
 

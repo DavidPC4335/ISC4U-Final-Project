@@ -28,8 +28,8 @@ public class Bomber extends Enemy {
     public Bomber(double x, double y, World world) {
         super(x, y, 45, 64, world);
         damage = 3;
-        hp = 1;
-        speed = 3.5;
+        hp =10;
+        speed = 2.5;
     }
 
     @Override //overrides super method
@@ -46,10 +46,8 @@ public class Bomber extends Enemy {
         if (facing == -1) { //if facing in the -1 direction
             xoff = 75; //set the x offset accordingly
         }
-
-        g2d.drawImage(drawImage, (int) x + xoff, (int) y + yoff, (int) (hitBox.getWidth() * 3) * facing, (int) (hitBox.getHeight() * 1.5), null);  //draw the bomber
-        g2d.draw(hitBox);   //draw the hitbox of bomber
-        g2d.draw(world.getPlayer().getBounds());    //
+        
+        g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
     }
 
     @Override   //overrides the super method
@@ -72,7 +70,9 @@ public class Bomber extends Enemy {
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
-        return running; //returrn the filled array
+        moving = running;
+        return running;
+
     }
 
 }

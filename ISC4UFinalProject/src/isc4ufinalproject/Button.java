@@ -43,6 +43,17 @@ public class Button extends MenuComponent {
 
         this.txtSize = height / 3;
     }
+    public Button(int x, int y, int width, int height, String text) {
+        this.x = x;
+        this.y = y;
+        this.text = text;
+        this.width = width;
+        this.height = height;
+        butt = new Rectangle(x, y, width, height);    //instatiating rectangle button
+        
+
+        this.txtSize = height / 3;
+    }
 
     /**
      * method for returning if the mouse is hovered over the button
