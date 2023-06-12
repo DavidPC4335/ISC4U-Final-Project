@@ -7,12 +7,13 @@ package isc4ufinalproject;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 
 /**
  *
  * @author david
  */
-public class Particle {
+public class Particle implements Serializable{
     private int alpha = ((int)(Math.random()*255));
     private double x=0,y=0;
     private double xspd,yspd;

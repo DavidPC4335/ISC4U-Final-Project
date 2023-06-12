@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
@@ -17,7 +18,7 @@ import javax.swing.JOptionPane;
  *
  * @author david
  */
-public class Player extends Entity {
+public class Player extends Entity implements Serializable{
 
     public final int MAXSPEED = 3;
     private int hp = 10;
@@ -56,6 +57,7 @@ public class Player extends Entity {
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
+        moving = running;
         return running;
     }
     

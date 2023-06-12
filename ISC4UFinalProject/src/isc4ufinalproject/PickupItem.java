@@ -8,12 +8,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 /**
  *
  * @author dapav8190
  */
-public class PickupItem extends Entity{
+public class PickupItem extends Entity implements Serializable{
     private double t=0;
     private Item item;
     public PickupItem(int x,int y,Item item,World world){

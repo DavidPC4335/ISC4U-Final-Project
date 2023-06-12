@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.IllegalComponentStateException;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import javax.swing.JOptionPane;
@@ -30,16 +31,16 @@ public class Surface extends JPanel implements Runnable {
     public Surface() {
         super();
         newWorld();
-        
+
         this.setFocusable(true);
         this.requestFocus();
-        
+
         addMouseListener(titleMenu);
         //this.removeMouseListener(titleMenu);
     }
 
-    public void newWorld(){
-        if(gameWorld!= null){
+    public void newWorld() {
+        if (gameWorld != null) {
             removeKeyListener(gameWorld);
             removeMouseListener(gameWorld);
         }
@@ -47,7 +48,7 @@ public class Surface extends JPanel implements Runnable {
         addKeyListener(gameWorld);
         addMouseListener(gameWorld);
     }
-    
+
     public void addNotify() {
         super.addNotify();
         animator = new Thread(this);
@@ -143,11 +144,30 @@ public class Surface extends JPanel implements Runnable {
         });
         //setting the action for the continue button to load a save
         cont.setAction(() -> {
+            this.removeMouseListener(gameWorld);
+            this.removeKeyListener(gameWorld);
             try {
-                FileInputStream in = new FileInputStream(System.getProperty("user.dir") + "/saves/save.world");
-                ObjectInputStream s = new ObjectInputStream(in);
-                gameWorld = (World)s.readObject();
+                FileInputStream fi = new FileInputStream(new File("save.world"));
+                ObjectInputStream oi = new ObjectInputStream(fi);
+
+                // Read objects
+                World w = (World) oi.readObject();
+                w.setSurface(this);
+                Entity e;
+                for (int i = 0; i < w.getEntities().size(); i++) {
+                    e = w.getEntities().get(i);
+                    e.loadImages();
+                    e.setWorld(w);
+                    e.setBounds(w.getBounds().get(i));
+                    e.setPos(w.getPositions().get(i));
+                }
+           
+
+                gameWorld = w;
+                this.addMouseListener(gameWorld);
+                this.addKeyListener(gameWorld);
                 focusScreen = 1;
+                JOptionPane.showMessageDialog(null, "World Found");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "World not Found");
             }

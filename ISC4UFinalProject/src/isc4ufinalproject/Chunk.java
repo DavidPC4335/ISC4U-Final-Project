@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
@@ -17,7 +18,7 @@ import javax.swing.JOptionPane;
  *
  * @author david
  */
-public class Chunk {
+public class Chunk implements Serializable{
 
     //initializinf private variables
     private int[][] tiles;
