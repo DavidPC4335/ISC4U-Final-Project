@@ -22,6 +22,7 @@ public class Player extends Entity {
     public final int MAXSPEED = 3;
     private int hp = 10;
     private int hitCooldown =0;
+    private Rectangle drawRect = new Rectangle();
     public Player(double x, double y, World world) {
         super(x, y, 32, 64, world);
         animationSpeed = 0.2;
@@ -38,12 +39,12 @@ public class Player extends Entity {
         }
         g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
         //g2d.drawRect((int) x, (int) y, (int) hitBox.getWidth(), (int) hitBox.getHeight());
+       // g2d.draw(drawRect);
     }
     
     public BufferedImage[] loadImages() {
         BufferedImage running[] = new BufferedImage[8];   //initializind image array
         try {
-            BufferedImage readImg; 
             jump = ImageIO.read(Chunk.class.getResourceAsStream("characterJump.png")); //load the dirt sprite as a buffered image
             
             for (int i = 0; i < running.length; i++) {
@@ -70,7 +71,13 @@ public class Player extends Entity {
     }
     public void attack(int damage,int reach){
         if(hitCooldown <=0){
-        Rectangle hitZone = new Rectangle(screenX,screenY,reach,(int)hitBox.getBounds().getHeight());
+            Rectangle hitZone;
+            if(reach>0){
+        hitZone = new Rectangle(screenX+(int)(hitBox.getWidth()/2),screenY,reach,(int)hitBox.getBounds().getHeight());
+            }else{
+         hitZone = new Rectangle(screenX+(int)(hitBox.getWidth()/2)+reach,screenY,Math.abs(reach),(int)hitBox.getBounds().getHeight());
+            }
+        drawRect = hitZone;
         Entity e;
         for (int i=0;i<world.getEntities().size();i++) {
             e = world.getEntities().get(i);

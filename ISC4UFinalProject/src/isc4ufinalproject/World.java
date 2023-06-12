@@ -528,7 +528,7 @@ public class World implements KeyListener, MouseListener, Serializable {
                 showInventory = !showInventory;
                 break;
             case 'b':
-
+                entities.add(new Zombie(player.getX()+200,player.getY(),this));
                 break;
         }
 

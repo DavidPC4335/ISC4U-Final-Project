@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package isc4ufinalproject;
 
@@ -12,27 +13,28 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author dapav8190
+ * @author david
  */
-public class Bomber extends Enemy{
-
-    
-     public Bomber(double x, double y, World world){
-        super(x,y,45,64,world);
-        damage = 3;
-        hp =10;
-        speed = 2.5;
+public class Zombie extends Enemy{
+     
+        
+     public Zombie(double x, double y, World world){
+        super(x,y,30,64,world);
+        damage = 2;
+        hp =7;
+        speed = 0.5;
     }
     
     
     @Override
     public void draw(Graphics2D g2d, double x, double y) {
-        int xoff = -40,yoff = -20;
+        int xoff = -30,yoff = -45;
         if(facing == -1){
-            xoff = 75;
+            xoff = 55;
         }
-        
-        g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
+        //(int)(hitBox.getWidth()*5)*facing,(int)(hitBox.getHeight()*3)
+        g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,85*facing,120,null);
+        //g2d.draw(hitBox);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class Bomber extends Enemy{
             
             
             for (int i = 0; i < running.length; i++) {
-                running[i] = ImageIO.read(Chunk.class.getResourceAsStream("enemy1-"+i+".png")); //load the dirt sprite as a buffered image
+                running[i] = ImageIO.read(Chunk.class.getResourceAsStream("zombieF"+(i+1)+".png")); //load the dirt sprite as a buffered image
             }
             down = running[3];
             jump = running[0];
@@ -54,5 +56,4 @@ public class Bomber extends Enemy{
         }
         return running;
     }
-    
 }

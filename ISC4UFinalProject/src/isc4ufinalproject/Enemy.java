@@ -38,7 +38,9 @@ public abstract class Enemy extends Entity{
             yspd = -3;
             world.getPlayer().move(facing * 10, -3);
         }else{
-            xspd += ((double)sign((int)(world.getPlayer().getX()-x))/10) * speed;
+            if(Math.abs(xspd) < Math.abs(speed)){
+            xspd += ((double)sign((int)(world.getPlayer().getX()-x)));
+            }
         }
         }else{
             hitCooldown --;
