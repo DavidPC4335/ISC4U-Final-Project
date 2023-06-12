@@ -52,6 +52,7 @@ public class Bomber extends Enemy{
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
+        moving = running;
         return running;
     }
     

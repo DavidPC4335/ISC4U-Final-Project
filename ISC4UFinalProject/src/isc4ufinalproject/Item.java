@@ -7,6 +7,7 @@ package isc4ufinalproject;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
@@ -14,7 +15,7 @@ import javax.swing.JOptionPane;
  *
  * @author dapav8190
  */
-public class Item {
+public class Item implements Serializable{
     private static Image[] icons = loadImages();
     private String name;
     private String description;

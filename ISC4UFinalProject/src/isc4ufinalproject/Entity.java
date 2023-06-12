@@ -8,6 +8,7 @@ package isc4ufinalproject;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
@@ -15,7 +16,7 @@ import java.awt.image.BufferedImage;
  *
  * @author david
  */
-public abstract class Entity {
+public abstract class Entity{
 
     // declaring protected variables
     protected double x, y, xspd, yspd, prevX;
@@ -23,7 +24,7 @@ public abstract class Entity {
     protected World world;
     public static final double GRAVITY = 0.2;   //initializing the gravity constant
     protected int facing = 1;
-    protected Image[] moving = loadImages();
+    protected Image[] moving = new BufferedImage[0];
     protected Image standing;
     protected double animationFrame = 0;
     protected Image drawImage, jump, down;
@@ -51,7 +52,9 @@ public abstract class Entity {
     public void draw(Graphics2D g2d) {
         draw(g2d, screenX, screenY);
     }
-
+    public void setWorld(World w){
+        this.world = w;
+    }
     /**
      * abstract method for loading buffered images into an array
      *
@@ -68,10 +71,18 @@ public abstract class Entity {
         xspd = 0;
         yspd = 0;
         hitBox = new Rectangle(new Dimension(50, 50));//sets hitbox to new square 50x50
-
+        loadImages();
         drawImage = standing;
     }
 
+    public void setPos(Point p){
+        this.x = p.x;
+        this.y = p.y;
+    }
+    
+    public void setBounds(Rectangle r){
+        this.hitBox = r;
+    }
     /**
      * chained abstract constructor method for entity
      *

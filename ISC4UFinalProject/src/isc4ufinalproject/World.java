@@ -17,7 +17,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -46,11 +49,14 @@ public class World implements KeyListener, MouseListener, Serializable {
     private ArrayList<Entity> entities = new ArrayList();
     private ArrayList<Particle> particles;
     //visuals
-    private Image background, heart;
+    private ArrayList<Point> positions = new ArrayList();
+    private ArrayList<Rectangle> bounds = new ArrayList();
+    private static Image background, heart;
     private char pressedChar = 0;
     private Item[] inventory = new Item[12];
     private boolean showInventory = false, init = false;
     private int selected = 0, swingFrames = 0, startSwing = 30;
+    private static Button saveBtn = new Button(10, 250, 150, 50, "Save and Exit");
 
     /**
      * constructor method for the world
@@ -75,8 +81,13 @@ public class World implements KeyListener, MouseListener, Serializable {
         }
 
     }
-
-    public void loadImages() {
+    
+    public void setSurface(Surface s){
+        surface = s;
+    }
+    
+    
+    public static void loadImages() {
         background = Menu.BACKGROUND;
         try {
             heart = ImageIO.read(Chunk.class.getResourceAsStream("heart.png")); //load the dirt sprite as a buffered image
@@ -146,6 +157,12 @@ public class World implements KeyListener, MouseListener, Serializable {
         }
     }
 
+    public ArrayList<Point> getPositions(){
+        return positions;
+    }
+     public ArrayList<Rectangle> getBounds(){
+        return bounds;
+    }
     public void drawUI(Graphics2D g2d) {
         //drawing hotbar
         int dx, dy = 20;
@@ -162,7 +179,6 @@ public class World implements KeyListener, MouseListener, Serializable {
                 g2d.fillRect(dx, dy, 50, 50);
                 if (inventory[i] != null) {
                     g2d.drawImage(inventory[i].getImage(), dx, dy, 50, 50, null);
-                    
 
                 }
                 Font font = new Font("Consolas", Font.BOLD, 20);    //create new font of desired size
@@ -177,9 +193,9 @@ public class World implements KeyListener, MouseListener, Serializable {
                 }
                 g2d.setFont(new Font("Consolas", Font.BOLD, 15));
                 g2d.setColor(Color.white);
-                
-                g2d.drawString("1-4: Assign Hotbar Slot", 270, 95);
-                g2d.drawString("O : Destroy Item", 270, 115);
+
+                g2d.drawString("1-4: Assign Hotbar Slot", 270, 125);
+                g2d.drawString("O : Destroy Item", 270, 155);
                 if (new Rectangle(dx, dy, 50, 50).contains(new Point((int) mx, (int) my))) {
 
                     if (inventory[i] != null) {
@@ -214,6 +230,30 @@ public class World implements KeyListener, MouseListener, Serializable {
 
                 }
             }
+            saveBtn.draw(g2d);
+            /**
+             * saving world
+             */
+            if (saveBtn.checkClick(mx, my, clicked)) {
+                clicked = false;
+                try {
+                    for (int j = 0; j < entities.size(); j++) {
+                        positions.add(j,new Point((int)entities.get(j).getX(),(int)entities.get(j).getY()));//saving entity positions
+                        bounds.add(j,entities.get(j).getBounds());
+                    }
+                    surface.setScreen(0);
+                    surface = null;
+                    FileOutputStream f = new FileOutputStream(new File("save.world"));
+                    ObjectOutputStream o = new ObjectOutputStream(f);
+                    
+                    o.writeObject(this);
+                    o.close();
+                    f.close();
+                    
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,e);
+                }
+            }
         } else {
             for (i = 0; i < 4; i++) {
                 dx = 20 + (i * 60);
@@ -236,10 +276,10 @@ public class World implements KeyListener, MouseListener, Serializable {
                     g2d.setStroke(new BasicStroke(2));
                 }
 
-            
-            g2d.setFont(new Font("Consolas", Font.PLAIN, 15));
+                g2d.setFont(new Font("Consolas", Font.PLAIN, 15));
                 g2d.setColor(Color.white);
-                g2d.drawString("i: Open Inventory", 270, 35);}
+                g2d.drawString("i: Open Inventory", 270, 35);
+            }
         }
         dy = 20;
         //drawing hearts
@@ -247,7 +287,7 @@ public class World implements KeyListener, MouseListener, Serializable {
             if (j % 5 == 0 && j != 0) {
                 dy += 40;
             }
-            g2d.drawImage(heart, (surface.getWidth() - 250) + (j % 5) * 50, dy, 40, 40, null);
+            g2d.drawImage(heart, ((int)(player_screen_x*2) - 250) + (j % 5) * 50, dy, 40, 40, null);
         }
     }
 
