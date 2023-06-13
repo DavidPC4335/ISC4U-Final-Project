@@ -53,7 +53,7 @@ public abstract class Enemy extends Entity {
             xspd += ((double)sign((int)(world.getPlayer().getX()-x)));
             }
         }
-        if (hitCooldown <= 0) { //if the hit cooldown is less than or equal to 0
+        
             if (hitBox.contains(world.getPlayer().getBounds())) {   //if the hitbox is within bounds
                 world.getPlayer().hit(damage);  //
                 hitCooldown = 70;   //set the hit cooldown
@@ -63,13 +63,11 @@ public abstract class Enemy extends Entity {
             } else {
                 xspd += ((double) sign((int) (world.getPlayer().getX() - x)) / 10) * speed;
             }
-        } else {
+
+    }else{
             hitCooldown--;
-
         }
-
     }
-
     /**
      * getter method for enemy damage
      *
@@ -98,10 +96,13 @@ public abstract class Enemy extends Entity {
     public void hit(int damage){
         hp-=damage;
         hitCooldown = 70;
-        world.addParticles(screenX,screenY,10 , Color.red);
+        world.addParticles(screenX,screenY,5 , Color.red.brighter());
         if(hp<=0){
-            world.addParticles(screenX,screenY,10 , Color.red);
+            world.addParticles(screenX,screenY,10 , Color.yellow);
             world.remove(this);
+            world.getEntities().add(new PickupItem((int)x,(int)y,Item.COIN,world));
+        }else if(Math.abs(xspd) < 0.1){
+            hitCooldown+=100;
         }
     }
 

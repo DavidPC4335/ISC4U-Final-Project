@@ -27,6 +27,7 @@ public class Surface extends JPanel implements Runnable {
     private World gameWorld;
     private int focusScreen = 0;
     private Menu titleMenu = getTitleMenu();
+    private Menu deadMenu;
 
     public Surface() {
         super();
@@ -78,7 +79,8 @@ public class Surface extends JPanel implements Runnable {
                 gameWorld.draw(g2d);
                 break;
             case 2:
-
+                deadMenu.setMousePos(mp.x, mp.y);
+                deadMenu.draw(g2d);
                 break;
         }
     }
@@ -128,11 +130,12 @@ public class Surface extends JPanel implements Runnable {
     public Menu getTitleMenu() {
         Menu m = new Menu(this);
         m.setVisibleBackground(true);
-
-        Button newWorld = new Button(850, 500, 200, 100, "New World", m);
-        Button credits = new Button(850, 750, 200, 50, "Credits", m);
-        Button cont = new Button(850, 625, 200, 100, "Continue", m);
-
+        Button newWorld = new Button(850, 300, 200, 100, "New World", m);
+        newWorld.setCentered(true);
+        Button credits = new Button(850, 550, 200, 50, "Credits", m);
+        credits.setCentered(true);
+        Button cont = new Button(850, 425, 200, 100, "Continue", m);
+        cont.setCentered(true);
         //setting the action for the "New world button to generate new world
         newWorld.setAction(() -> {
             //gameWorld = new World(this);
@@ -161,13 +164,11 @@ public class Surface extends JPanel implements Runnable {
                     e.setBounds(w.getBounds().get(i));
                     e.setPos(w.getPositions().get(i));
                 }
-           
 
                 gameWorld = w;
                 this.addMouseListener(gameWorld);
                 this.addKeyListener(gameWorld);
                 focusScreen = 1;
-                JOptionPane.showMessageDialog(null, "World Found");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "World not Found");
             }
@@ -175,7 +176,39 @@ public class Surface extends JPanel implements Runnable {
         m.add(newWorld);    //adding new world button
         m.add(credits); //adding credits utton
         m.add(cont);    //adding continue button
-        m.add(new Label(850, 100, 48, "Terrarium"));    //labels the title screen
+        Label title = new Label(850, 100, 48, "Terrarium");
+        title.setCentered(true);
+        m.add(title);    //labels the title screen
+        return m;   //returns the enu with all the added components
+    }
+
+    public Menu getDeadMenu(int coins, int khopesh, int bosses) {
+        removeMouseListener(deadMenu);
+        Menu m = new Menu(this);
+
+        Label title = new Label(850, 100, 48, "You Died :(");
+        title.setCentered(true);
+        m.add(title);    //labels the title screen
+        Label gold = new Label(850, 200, 24, "Gold collected: " + coins);
+        gold.setCentered(true);
+        m.add(gold);
+        Label k = new Label(850, 250, 24, "Khopeshes collected: " + khopesh);
+        k.setCentered(true);
+        m.add(k);
+        Label b = new Label(850, 300, 24, "Bosses Slain: " + bosses);
+        b.setCentered(true);
+        m.add(b);
+        Button newWorld = new Button(850, 450, 200, 100, "Continue", m);
+        newWorld.setCentered(true);
+        newWorld.setAction(() -> {
+            //gameWorld = new World(this);
+            this.setScreen(0);
+            titleMenu.setClicked(false);
+        });
+        m.add(newWorld);
+        focusScreen = 2;
+        deadMenu =m;
+        addMouseListener(deadMenu);
         return m;   //returns the enu with all the added components
     }
 

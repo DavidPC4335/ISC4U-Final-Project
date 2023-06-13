@@ -29,6 +29,7 @@ public class Label extends MenuComponent {
 
         textSize = txtSz;
         text = txt;
+        width = txtSz*txt.length();
     }
 
     /**
@@ -44,6 +45,7 @@ public class Label extends MenuComponent {
         this.y = y;
         textSize = txtSz;
         text = txt;
+        width = txtSz*txt.length() / 2;
     }
 
     /**

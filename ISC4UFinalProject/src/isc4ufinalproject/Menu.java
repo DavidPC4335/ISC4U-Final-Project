@@ -97,12 +97,17 @@ public class Menu implements MouseListener {
 
                 }
             }
+            if(m.getCenter()){
+                m.setPosition((gameSurface.getWidth()/2) - m.getWidth()/2, m.getY());
+            }
         }
         if (clicked) {  //if clicked is true
             clicked = false;    //set clicked to false
         }
     }
-
+    public void setClicked(boolean clicked){
+        this.clicked = clicked;
+    }
     /**
      * setter method for the mouse position
      *

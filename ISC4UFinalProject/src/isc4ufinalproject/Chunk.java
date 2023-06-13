@@ -41,7 +41,7 @@ public class Chunk implements Serializable{
      * @return - the array full of the desired buffered image
      */
     public static BufferedImage[] loadImages() {
-        BufferedImage b[] = new BufferedImage[6];   //initializind image array
+        BufferedImage b[] = new BufferedImage[7];   //initializind image array
         try {
             BufferedImage dirt = ImageIO.read(Chunk.class.getResourceAsStream("dirt.jpg")); //load the dirt sprite as a buffered image
             BufferedImage stone = ImageIO.read(Chunk.class.getResourceAsStream("stone.jpg")); //load the dirt sprite as a buffered image
@@ -51,7 +51,7 @@ public class Chunk implements Serializable{
             b[3] = ImageIO.read(Chunk.class.getResourceAsStream("grass.png"));
             b[4] = ImageIO.read(Chunk.class.getResourceAsStream("sand.png"));
             b[5] = ImageIO.read(Chunk.class.getResourceAsStream("otherSand.png"));
-
+            b[6] = ImageIO.read(Chunk.class.getResourceAsStream("graveStone.png"));
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
@@ -162,6 +162,9 @@ public class Chunk implements Serializable{
             for (int j = height; j < c.tiles[i].length; j++) {  //for the num int between the height and the number of chunks
                 if(j == height){
                     c.tiles[i][j] = 3;
+                    if(Math.random()*100 > 95){
+                        c.tiles[i][j-1] = 6;
+                    }
                 }else{
                 c.tiles[i][j] = (int) (1 + (Math.random() + ((double) (j - pHeight) / 100)));  //set to index of dirt Tile
                 }
@@ -204,7 +207,7 @@ public class Chunk implements Serializable{
      */
     public boolean getSolid(int i, int j) {
         if (j >= 0 && j < tiles[0].length && i < tiles.length) {
-            return (tiles[i][j] != 0);
+            return (tiles[i][j] != 0)&&tiles[i][j]<6;
         } else {
             System.out.println(i);
             return true;
@@ -237,7 +240,19 @@ public class Chunk implements Serializable{
             return 0;
         }
     }
-
+    /**
+     * gets block at index
+     * @param i i index
+     * @param j j index
+     * @return block at given index
+     */
+    public int get(int i, int j){
+        if (j >= 0 && j < tiles[0].length && i < tiles.length) {    //if the inputted indexes are within acceptable range
+            return tiles[i][j];
+        } else {    //if the indexes are not within acceptable range
+            return -1;
+        }
+    }
     /**
      * method for placing a tile at a desired point
      *

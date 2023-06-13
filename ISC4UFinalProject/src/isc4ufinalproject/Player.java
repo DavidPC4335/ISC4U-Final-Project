@@ -5,6 +5,7 @@
  */
 package isc4ufinalproject;
 
+import static isc4ufinalproject.World.debugMessage;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -31,6 +32,7 @@ public class Player extends Entity implements Serializable{
     }
 
     public void draw(Graphics2D g2d, double x, double y) {
+        debugMessage+="("+x+","+y+")";
          if(hitCooldown >0){
              hitCooldown--;
          }
@@ -40,7 +42,7 @@ public class Player extends Entity implements Serializable{
         }
         g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
         //g2d.drawRect((int) x, (int) y, (int) hitBox.getWidth(), (int) hitBox.getHeight());
-       // g2d.draw(drawRect);
+        g2d.draw(hitBox);
     }
     
     public BufferedImage[] loadImages() {
@@ -66,7 +68,7 @@ public class Player extends Entity implements Serializable{
         hp-=damage;
         if(hp<=0){
             world.getSurface().setScreen(0);
-            world.getSurface().newWorld();
+            world.getSurface().getDeadMenu(0,0,0);
         }else{
             world.addParticles(screenX,screenY,10 , Color.red);
         }

@@ -40,10 +40,11 @@ public class Button extends MenuComponent {
         this.height = height;
         butt = new Rectangle(x, y, width, height);    //instatiating rectangle button
         this.menu = menu;
-
+super.width = width;
         this.txtSize = height / 3;
     }
     public Button(int x, int y, int width, int height, String text) {
+        super.width = width;
         this.x = x;
         this.y = y;
         this.text = text;
@@ -109,13 +110,14 @@ public class Button extends MenuComponent {
      * @param g - the graphics to draw the button
      */
     public void draw(Graphics2D g) {
-
+        butt.setLocation(x,y);
         g.setColor(col);
         if (hovered) {
             g.setColor(col.darker());
         }
         g.fill(butt);
-
+        g.setColor(Color.BLACK);
+        g.draw(butt);
         g.setColor(Color.black);
         Font sFont = new Font("Consolas", Font.BOLD, txtSize);    //create new font of desired size
         g.setFont(sFont); //apply font to g2d

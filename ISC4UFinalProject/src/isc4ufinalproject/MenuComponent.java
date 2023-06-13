@@ -13,8 +13,8 @@ import java.awt.Graphics2D;
  */
 public abstract class MenuComponent {
 
-    protected int x, y;  //declaring protected ints
-
+    protected int x, y,width;  //declaring protected ints
+    protected boolean center =false; 
     /**
      * draw method that any subclass must contain to draw the component
      *
@@ -22,6 +22,14 @@ public abstract class MenuComponent {
      */
     public abstract void draw(Graphics2D g);
 
+    
+    public boolean getCenter(){
+        return center;
+    }
+    
+    public void setCentered(boolean centered){
+        this.center = centered;
+    }
     /**
      * getter method for the position of the component
      *
@@ -44,4 +52,12 @@ public abstract class MenuComponent {
      */
     public abstract String toString();
 
+    public int getY(){
+        return y;
+    }
+    
+    public int getWidth(){
+        return width;
+    }
+    
 }

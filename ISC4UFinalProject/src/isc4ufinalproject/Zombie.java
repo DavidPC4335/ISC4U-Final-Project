@@ -22,9 +22,10 @@ public class Zombie extends Enemy{
         super(x,y,30,64,world);
         damage = 2;
         hp =7;
-        speed = 0.5;
+        speed = (Math.random()*0.2)+0.4;
     }
     
+     
     
     @Override
     public void draw(Graphics2D g2d, double x, double y) {
@@ -54,6 +55,7 @@ public class Zombie extends Enemy{
         } catch (IOException e) {   //catch if image can't be read
             JOptionPane.showMessageDialog(null, e);
         }
+        moving = running;
         return running;
     }
 }
