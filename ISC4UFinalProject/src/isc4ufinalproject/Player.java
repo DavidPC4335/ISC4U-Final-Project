@@ -42,7 +42,7 @@ public class Player extends Entity implements Serializable{
         }
         g2d.drawImage(drawImage,(int)x + xoff,(int)y +yoff,(int)(hitBox.getWidth()*3)*facing,(int)(hitBox.getHeight()*1.5),null);
         //g2d.drawRect((int) x, (int) y, (int) hitBox.getWidth(), (int) hitBox.getHeight());
-        g2d.draw(hitBox);
+        //g2d.draw(hitBox);
     }
     
     public BufferedImage[] loadImages() {
@@ -68,7 +68,7 @@ public class Player extends Entity implements Serializable{
         hp-=damage;
         if(hp<=0){
             world.getSurface().setScreen(0);
-            world.getSurface().getDeadMenu(0,0,0);
+            world.getSurface().getDeadMenu(world.getInventory()[world.linearSearch(Item.COIN)].getStack(),world.getInventory()[world.linearSearch(Item.KHOPESH)].getStack(),world.getBosses());
         }else{
             world.addParticles(screenX,screenY,10 , Color.red);
         }
@@ -88,7 +88,7 @@ public class Player extends Entity implements Serializable{
             if(e instanceof Enemy){
                         
                 if(e.getBounds().intersects(hitZone)){
-                    e.setSpeed(facing*14,-3);  
+                    e.setSpeed(facing*14*((Enemy)e).getKnockBack(),-3);  
                     ((Enemy) e).hit(damage);
 
                 }

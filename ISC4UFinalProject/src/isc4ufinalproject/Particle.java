@@ -37,6 +37,7 @@ public class Particle implements Serializable{
             x+=xspd;
             y+=yspd;
         alpha--;
+        yspd+=0.05;
         g2d.setColor(new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha));
         g2d.fillOval((int)x,(int)y,10,10);
         g2d.setColor(Color.white);

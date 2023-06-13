@@ -68,7 +68,7 @@ public class Chunk implements Serializable{
      */
     public static Chunk[] generateWorld(int pHeight, Chunk[] c, int i) {
         if (i < c.length) { //if the index to genererate is less than the hghest index in the array of chunks
-            if(i%5 ==0 && i>0){
+            if(i%6 ==0 && i>0){
                 c[i] = generateSandHouse(pHeight);
             }else{
             c[i] = generateChunk(pHeight);  //generates a chuk of a set base height and adds it to chunk array at index i
@@ -209,11 +209,22 @@ public class Chunk implements Serializable{
         if (j >= 0 && j < tiles[0].length && i < tiles.length) {
             return (tiles[i][j] != 0)&&tiles[i][j]<6;
         } else {
-            System.out.println(i);
+            
             return true;
         }
     }
 
+    public boolean canPlace(int i, int j){
+        boolean p =false;
+               
+        if(!getSolid(i,j)){
+            if(get(i+1,j)>0 || get(i-1,j)>0 || get(i,j+1)>0 || get(i,j-1)>0){
+                return true;
+            }
+        }
+                
+        return false;
+    }
     
     public void setCastle(boolean isCastle){
         this.isCastle = isCastle;
@@ -247,7 +258,7 @@ public class Chunk implements Serializable{
      * @return block at given index
      */
     public int get(int i, int j){
-        if (j >= 0 && j < tiles[0].length && i < tiles.length) {    //if the inputted indexes are within acceptable range
+        if (j >= 0 && j < tiles[0].length && i < tiles.length && i>=0) {    //if the inputted indexes are within acceptable range
             return tiles[i][j];
         } else {    //if the indexes are not within acceptable range
             return -1;

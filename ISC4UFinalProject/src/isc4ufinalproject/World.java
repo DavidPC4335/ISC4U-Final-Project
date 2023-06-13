@@ -57,7 +57,7 @@ public class World implements KeyListener, MouseListener, Serializable {
     private boolean showInventory = false, init = false;
     private int selected = 0, swingFrames = 0, startSwing = 30;
     private static Button saveBtn = new Button(10, 250, 150, 50, "Save and Exit");
-
+    private int bosses =0;
     /**
      * constructor method for the world
      *
@@ -199,6 +199,8 @@ public class World implements KeyListener, MouseListener, Serializable {
 
                 g2d.drawString("1-4: Assign Hotbar Slot", 270, 125);
                 g2d.drawString("O : Destroy Item", 270, 155);
+                g2d.drawString("S : Sort inventory (by Name)", 270, 175);
+                g2d.drawString("P : Quick Pickaxe", 270, 195);
                 if(inventory[i] != null){g2d.drawString(inventory[i].getStack() + "", dx + 35, dy + 45);}
                 if (new Rectangle(dx, dy, 50, 50).contains(new Point((int) mx, (int) my))) {
 
@@ -295,6 +297,10 @@ public class World implements KeyListener, MouseListener, Serializable {
         }
     }
 
+    public Item[] getInventory(){
+        return inventory;
+    }
+    
     public void drawParticles(Graphics2D g2d) {
         ArrayList<Particle> remove = new ArrayList();
         //addParticles(500,500,10,Color.red);
@@ -316,6 +322,30 @@ public class World implements KeyListener, MouseListener, Serializable {
 
     }
 
+    public static void insertionSort(Item[] a){
+        int j;
+        for (int i = 1; i < a.length; i++) {
+            j=i;
+            while(j>0 && a[j-i].getName().compareTo(a[j].getName()) > 0){
+            //swaps j and j-1
+            Item t = a[j];
+            a[j] = a[j-1];
+            a[j-1] = t;
+            j--;
+            }
+        }
+    }
+    
+public int linearSearch(Item i){
+        for (int j = 0; j < inventory.length; j++) {
+            if(inventory[j] != null){
+            if(inventory[j].equals(i)){
+                return j;
+            }
+            }
+        }
+        return -1;
+    }
     public int updateWorld(int i, double x) {
         if ((i == 49 || i == 0) && x < 500) {//edge cases for end of world
             i = 0;
@@ -390,6 +420,11 @@ public class World implements KeyListener, MouseListener, Serializable {
         return collided;
     }
 
+    public int getBosses(){
+        return bosses;
+    }
+    
+    
     public void drawWorld(Graphics2D g2d) {
 
         //drawing world
@@ -473,12 +508,34 @@ public class World implements KeyListener, MouseListener, Serializable {
                             }
 
                         } else {//placing
-                            if (inventory[selected].canPlace()) {
+                            if (inventory[selected].canPlace() && chunks[mi].canPlace(j,k)) {
+                                
                                 chunks[mi].place(j, k, inventory[selected].getIndex());
+                                if (inventory[selected].getIndex() == 6){
+                                    boolean isStack = true;
+                                    for (int l = 0; l < 5; l++) {
+                                        if(chunks[mi].get(j,k+l) != 6){
+                                            isStack = false;
+                                        }
+                                    }
+                                    if(isStack){
+                                        for (int l = 0; l < 5; l++) {
+                                        chunks[mi].remove(j,k+l);
+                                        }
+                                        Zombie z = new Zombie((m.x / 32) * 32 - 50, (m.y / 32) * 32 +220, this);
+                                        z.getBounds().setSize(100, 200);
+                                        z.setHP(30);
+                                        z.isBoss(true);
+                                        entities.add(z);
+                                    }
+                                    }
+                                
                                 inventory[selected].setStack(-1);
                                 if (inventory[selected].getStack() <= 0) {
                                     inventory[selected] = null;
                                 }
+                                
+                            
                             }
                         }
                     }
@@ -539,6 +596,10 @@ public class World implements KeyListener, MouseListener, Serializable {
         return player;
     }
 
+    public void killBoss(){
+        bosses++;
+    }
+    
     /**
      * abstract mentod from the listener that reads user inputs
      *
@@ -576,7 +637,16 @@ public class World implements KeyListener, MouseListener, Serializable {
                 showInventory = !showInventory;
                 break;
             case 'b':
-                entities.add(new Zombie(player.getX()+200,player.getY(),this));
+                //entities.add(new Zombie(player.getX()+200,player.getY(),this));
+                break;
+            case 'p':
+                int i = linearSearch(Item.PICKAXE);
+                if(i>-1){
+                selected = i;
+                        }
+                break;
+            case 's':
+                insertionSort(inventory);
                 break;
         }
 
