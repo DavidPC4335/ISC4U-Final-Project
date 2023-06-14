@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+David PC and Calum M
+5/29/2023
+Item class that can be used in invenroty by the player
  */
 package isc4ufinalproject;
 

@@ -6,6 +6,9 @@ Main class for ICS 4U final project
 package isc4ufinalproject;
 
 import java.awt.EventQueue;
+import java.awt.Image;
+import java.net.URL;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -15,10 +18,13 @@ import javax.swing.JFrame;
 public class ISC4UFinalProject extends JFrame {
 
     public ISC4UFinalProject() {
+        URL imageURL = getClass().getResource("coin.png");
+        Image icon = new ImageIcon(imageURL).getImage();
+        setIconImage(icon);
         setTitle("Final Project!");
         setSize(600, 600);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //setUndecorated(true);//for Sull screen
+        setUndecorated(true);//for Sull screen
         add(new Surface());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

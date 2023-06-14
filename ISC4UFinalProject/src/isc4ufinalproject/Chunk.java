@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+David PC and Calum M
+5/29/2023
+Chunk class that contains a 25x50 block section of the world. Also includes static methods for generating a chunk and world.
  */
 package isc4ufinalproject;
 
