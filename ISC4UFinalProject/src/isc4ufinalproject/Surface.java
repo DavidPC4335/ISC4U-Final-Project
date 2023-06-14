@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+David PC and Calum M
+5/29/2023
+overall surface that draws on the JFrame(contains world and other menus)
  */
 package isc4ufinalproject;
 
@@ -192,7 +193,7 @@ public class Surface extends JPanel implements Runnable {
         Label gold = new Label(850, 200, 24, "Gold collected: " + coins);
         gold.setCentered(true);
         m.add(gold);
-        Label k = new Label(850, 250, 24, "Khopeshes collected: " + khopesh);
+        Label k = new Label(850, 250, 24, "Khopeshes collected: " + khopesh + "/8");
         k.setCentered(true);
         m.add(k);
         Label b = new Label(850, 300, 24, "Bosses Slain: " + bosses);
@@ -204,6 +205,7 @@ public class Surface extends JPanel implements Runnable {
             //gameWorld = new World(this);
             this.setScreen(0);
             titleMenu.setClicked(false);
+            this.newWorld();
         });
         m.add(newWorld);
         focusScreen = 2;

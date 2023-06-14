@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+David PC and Calum M
+5/29/2023
+Abstract Enemy class that contains damage speed and requires images to be loaded 
  */
 package isc4ufinalproject;
 
@@ -17,7 +18,7 @@ public abstract class Enemy extends Entity {
     protected int damage, hp;
     protected double speed;
     protected int hitCooldown = 0;
-
+    protected double knockback=1;
     /**
      * constructor method for an enemy
      *
@@ -31,7 +32,9 @@ public abstract class Enemy extends Entity {
         super(x, y, width, height, world);
     }
 
-    
+    public void setHP(int h){
+        hp=h;
+    }
     public void step(){
         super.step();
        
@@ -100,12 +103,21 @@ public abstract class Enemy extends Entity {
         if(hp<=0){
             world.addParticles(screenX,screenY,10 , Color.yellow);
             world.remove(this);
-            world.getEntities().add(new PickupItem((int)x,(int)y,Item.COIN,world));
+            if(this instanceof Zombie){
+                world.getEntities().add(new PickupItem((int)x,(int)y,Item.COIN,world));
+                if(((Zombie)this).isBoss){
+                 world.getEntities().add(new PickupItem((int)x,(int)y,Item.COIN,world));
+                 world.killBoss();
+                }
+            }
         }else if(Math.abs(xspd) < 0.1){
             hitCooldown+=100;
         }
     }
-
+public double getKnockBack(){
+    return knockback;
+}
+    
     /**
      * method for return the +/- sign of a number
      *

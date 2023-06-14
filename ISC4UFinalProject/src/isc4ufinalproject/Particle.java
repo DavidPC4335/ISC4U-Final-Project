@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+David PC and Calum M
+5/29/2023
+single particle that can be drawn on the world
  */
 package isc4ufinalproject;
 
@@ -37,6 +37,7 @@ public class Particle implements Serializable{
             x+=xspd;
             y+=yspd;
         alpha--;
+        yspd+=0.05;
         g2d.setColor(new Color(c.getRed(),c.getGreen(),c.getBlue(),alpha));
         g2d.fillOval((int)x,(int)y,10,10);
         g2d.setColor(Color.white);
